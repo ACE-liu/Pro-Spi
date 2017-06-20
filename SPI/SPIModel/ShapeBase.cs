@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SPI.Global;
 
 namespace SPI.SPIModel
 {
@@ -17,5 +18,8 @@ namespace SPI.SPIModel
         /// </summary>
         /// <returns></returns>
         Point GetCenter();
+        ShapeType GetShapeType();
+        bool OnFocus();
+        void DrawSelf(Graphics g);
     }
 }
