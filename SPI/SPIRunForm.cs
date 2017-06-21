@@ -10,20 +10,20 @@ using System.Windows.Forms;
 
 namespace SPI
 {
-    public partial class SPIProgramForm : UserControl
+    public partial class SPIRunForm : UserControl
     {
-        private static SPIProgramForm singleProForm = null;
-        private SPIProgramForm()
+        private static SPIRunForm singleRunForm = null;
+        private SPIRunForm()
         {
             InitializeComponent();
         }
-        public static SPIProgramForm GetInstance()
+        public static SPIRunForm GetInstance()
         {
-            if (singleProForm==null)
+            if (singleRunForm==null)
             {
-                singleProForm = new SPIProgramForm();
+                singleRunForm = new SPIRunForm();
             }
-            return singleProForm;
+            return singleRunForm;
         }
     }
 }
