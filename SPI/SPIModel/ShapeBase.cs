@@ -21,5 +21,7 @@ namespace SPI.SPIModel
         ShapeType GetShapeType();
         bool OnFocus();
         void DrawSelf(Graphics g);
+        Direction MouseOverWhere(Point e);
+        Point MarkShift { get; set; }
     }
 }

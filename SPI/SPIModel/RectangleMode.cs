@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SPI.Global;
-using static SPI.Global.ConfigMember;
+using static SPI.Global.Configuration;
 
 namespace SPI.SPIModel
 {
@@ -14,14 +14,16 @@ namespace SPI.SPIModel
         private Point center = Point.Empty;
         private ShapeType m_ShapeType = ShapeType.None;
     
-        public Point LeftPeak { get; private set; }
-        public int X { get { return LeftPeak.X; } }
-        public int Y { get { return LeftPeak.Y; } }
+        public int X { get; set; }
+        public int Y { get; set; }
         public int Width { get;  set; }
         public int Height { get;  set; }
+        public Point MarkShift { get; set; } = Point.Empty;
+        public Rectangle MRectangle { get { return new Rectangle(X + MarkShift.X, Y + MarkShift.Y, Width, Height); } }
+
         public Point GetCenter()
         {
-            return new Point(LeftPeak.X + Width / 2, LeftPeak.Y + Height / 2);
+            return new Point(X + Width / 2,Y + Height / 2);
         }
         /*默认构造函数*/
         public RectangleMode()
@@ -42,11 +44,43 @@ namespace SPI.SPIModel
         }
         public bool OnFocus()
         {
-            return CurFocus == this;
+            return CurFocus.ShowShape == this;
         }
         public void DrawSelf(Graphics g)
         {
             g.DrawRectangle(GetPenByShape(this, 1), X, Y, Width, Height);
+        }
+        public Direction MouseOverWhere(Point e)
+        {
+            int nowdelt = (int)(mdelt / MarkedPicture.CurDisplayRate);
+            if ((e.X < MRectangle.Left - nowdelt) || (e.X > MRectangle.Right + nowdelt) || (e.Y < MRectangle.Top - nowdelt) || (e.Y > MRectangle.Bottom + nowdelt))
+                return Direction.outside;
+
+            bool left = (e.X >= MRectangle.Left - nowdelt) && (e.X <= MRectangle.Left + nowdelt);
+            bool right = (e.X >= MRectangle.Right - nowdelt) && (e.X <= MRectangle.Right + nowdelt);
+            bool top = (e.Y >= MRectangle.Top - nowdelt) && (e.Y <= MRectangle.Top + nowdelt);
+            bool bottom = (e.Y >= MRectangle.Bottom - nowdelt) && (e.Y <= MRectangle.Bottom + nowdelt);
+
+            Direction mystate = Direction.outside;
+            if (top)
+            {
+                if (left) { mystate = Direction.topLeft; }
+                else if (right) { mystate = Direction.topRight; }
+                else { mystate = Direction.top; }
+            }
+            else if (bottom)
+            {
+                if (left) { mystate = Direction.bottomLeft; }
+                else if (right) { mystate = Direction.bottomRight; }
+                else { mystate = Direction.bottom; }
+            }
+            else
+            {
+                if (left) { mystate = Direction.left; }
+                else if (right) { mystate = Direction.right; }
+                else { mystate = Direction.center; }
+            }
+            return mystate;
         }
     }
 }

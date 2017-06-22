@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SPI.Global;
-using static SPI.Global.ConfigMember;
+using static SPI.Global.Configuration;
 
 namespace SPI.SPIModel
 {
@@ -17,8 +17,9 @@ namespace SPI.SPIModel
 
         public static Point DefaultCenter;
         public const int DefaultRadius=20;
-
-         public Point GetCenter()
+        public Point MarkShift { get; set; }
+        public Point ShiftCenter { get { return new Point(center.X + MarkShift.X, center.Y + MarkShift.Y); } }
+        public Point GetCenter()
         {
             return center;
         }
@@ -37,11 +38,29 @@ namespace SPI.SPIModel
         }
         public bool OnFocus()
         {
-            return CurFocus == this;
+            return CurFocus.ShowShape == this;
         }
         public void DrawSelf(Graphics g)
         {
             g.DrawEllipse(GetPenByShape(this, 1), new RectangleF(center.X - radius, center.Y - radius, 2 * radius, 2 * radius));
+        }
+        public Direction MouseOverWhere(Point e)
+        {
+            int nowdelt = (int)(mdelt / MarkedPicture.CurDisplayRate);
+            int direction = CalculateDirec(ShiftCenter, e);
+            if (direction> mdelt+nowdelt)
+            {
+                return Direction.outside;
+            }
+            else if(direction<=mdelt+nowdelt&&direction>=mdelt-nowdelt)
+            {
+                //再判断...
+                return Direction.top;
+            }
+            else
+            {
+                return Direction.center;
+            }
         }
     }
 }
