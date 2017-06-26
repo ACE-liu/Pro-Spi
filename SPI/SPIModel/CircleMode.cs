@@ -9,42 +9,78 @@ using static SPI.Global.Configuration;
 
 namespace SPI.SPIModel
 {
-    public class CircleMode : ShapeBase
+    internal class CircleMode : ShapeBase
     {
         private Point center = Point.Empty;
         private ShapeType m_ShapeType = ShapeType.None;
-        private int radius;
 
+        public override int X { get; set; }
+        public override int Y { get; set; }
+        public override int Width { get; set; }
+        public override int Height { get; set; }
+        public override Point Location
+        {
+            get
+            {
+                return new Point(X, Y);
+            }
+
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
         public static Point DefaultCenter;
         public const int DefaultRadius=20;
-        public Point MarkShift { get; set; }
+        internal override Point MarkShift { get; set; }
         public Point ShiftCenter { get { return new Point(center.X + MarkShift.X, center.Y + MarkShift.Y); } }
-        public Point GetCenter()
+        internal override Point GetCenter()
         {
             return center;
         }
-        public ShapeType GetShapeType()
+        public CircleMode()
         {
-            return this.m_ShapeType;
-        }
-        public CircleMode(Point center,int radius)
-        {
+            this.Width = 30;
+            this.Height = 30;
             this.m_ShapeType = ShapeType.Circle;
-            this.center = center;
-            this.radius = radius;
         }
-        public CircleMode():this(DefaultCenter,DefaultRadius)
+        public CircleMode(int width, int height)
         {
+            this.Width = width;
+            this.Height = height;
+            this.m_ShapeType = ShapeType.Circle;
         }
-        public bool OnFocus()
+        internal override ShapeType GetShapeType()
+        {
+            return m_ShapeType;
+        }
+        internal override void Move(Point p)
+        {
+            this.X += p.X;
+            this.Y += p.Y;
+        }
+        internal override bool OnFocus()
         {
             return CurFocus.ShowShape == this;
         }
-        public void DrawSelf(Graphics g)
+        internal override Rectangle MRectangle { get { return new Rectangle(X + MarkShift.X, Y + MarkShift.Y, Width, Height); } }
+        /// <summary>
+        /// 将图形在板中坐标转化为在MarkedPicture中的坐标；
+        /// </summary>
+        /// <returns></returns>
+        internal override Point ChangeToShowPoint()
         {
-            g.DrawEllipse(GetPenByShape(this, 1), new RectangleF(center.X - radius, center.Y - radius, 2 * radius, 2 * radius));
+            return new Point(MarkedPicture.PosToShowX(X), MarkedPicture.PosToShowY(Y));
         }
-        public Direction MouseOverWhere(Point e)
+        internal override void DrawSelf(Graphics g,Pen p)
+        {
+            g.DrawEllipse(p, new RectangleF(ChangeToShowPoint(),new Size(Width,Height)));
+        }
+        internal override void ChangeSelf(Direction dt)
+        {
+        }
+        internal override Direction MouseOverWhere(Point e)
         {
             int nowdelt = (int)(mdelt / MarkedPicture.CurDisplayRate);
             int direction = CalculateDirec(ShiftCenter, e);
@@ -55,7 +91,30 @@ namespace SPI.SPIModel
             else if(direction<=mdelt+nowdelt&&direction>=mdelt-nowdelt)
             {
                 //再判断...
-                return Direction.top;
+                if (e.X==ShiftCenter.X&&e.Y<ShiftCenter.Y)
+                {
+                    return Direction.top;
+                }
+                else if (e.X == ShiftCenter.X && e.Y > ShiftCenter.Y)
+                {
+                    return Direction.bottom;
+                }
+                else if (e.X<ShiftCenter.X&& e.Y < ShiftCenter.Y)
+                {
+                    return Direction.topLeft;
+                }
+                else if(e.X < ShiftCenter.X && e.Y > ShiftCenter.Y)
+                {
+                    return Direction.bottomLeft;
+                }
+                else if (e.X>ShiftCenter.X&&e.Y<ShiftCenter.Y)
+                {
+                    return Direction.topRight;
+                }
+                else
+                {
+                    return Direction.bottomRight;
+                }
             }
             else
             {

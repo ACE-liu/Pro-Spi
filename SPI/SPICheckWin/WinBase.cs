@@ -49,6 +49,14 @@ namespace SPI.SPICheckWin
         {
             return ShowShape.MouseOverWhere(e); //交给图形解释
         }
+        public void Move(Point p)
+        {
+            ShowShape.Move(p);
+        }
+        public void Move(int x,int y)
+        {
+            Move(new Point(x, y));
+        }
         /// <summary>
         /// d1位置是否比d2位置关联更强.关联性按边界》中间》外边顺序排列.
         /// </summary>
@@ -61,6 +69,81 @@ namespace SPI.SPICheckWin
                 return false;
             return d1 > d2;
         }
+        public virtual void OnLoseFocus()
+        { }
+        public virtual void OnFocus()
+        { }
+        /// <summary>
+        /// 根据鼠标位置改变框位置或尺寸.
+        /// </summary>
+        /// <param name="me"></param>
+        public virtual void ChangeRect(Point me)
+        {
+            Point e = MarkedPicture.ShowToPos(me);
+            ChangeSelf(e);
+
+            //if (this.parent != null)
+            //    this.ShrinkToRange(parent);
+            //this.ExpandToIncludeSubs(changingEdge);
+            return;
+        }
+        /// <summary>
+        /// 根据鼠标位置改变自身大小或位置。鼠标位置已转换为板左边。
+        /// </summary>
+        /// <param name="orge">已转化为板坐标的鼠标位置</param>
+        public virtual void ChangeSelf(Point e)
+        {
+            Point orge = new Point(e.X - ShowShape.MarkShift.X, e.Y - ShowShape.MarkShift.Y);
+            switch (MarkedPicture.ChangingEdge)
+            {
+                case Direction.top:
+                    if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    break;
+                case Direction.bottom:
+                    ShowShape.Height = orge.Y - ShowShape.Y;
+                    break;
+                case Direction.left:
+                    if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                    break;
+                case Direction.right:
+                    ShowShape.Width = orge.X - ShowShape.X;
+                    break;
+                case Direction.topLeft:
+                    if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                    if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    break;
+                case Direction.bottomRight:
+                    ShowShape.Height = orge.Y - ShowShape.Y;
+                    ShowShape.Width = orge.X - ShowShape.X;
+                    break;
+                case Direction.topRight:
+                    if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    ShowShape.Width = orge.X - ShowShape.X;
+                    break;
+                case Direction.bottomLeft:
+                    if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                    ShowShape.Height = orge.Y - ShowShape.Y;
+                    break;
+                case Direction.center:
+                    if (this.wType!= WinType.Board)
+                    {
+                        Point oldpos = ShowShape.Location;
+#pragma warning disable CS1690 // 访问引用封送类的字段上的成员可能导致运行时异常
+                        ShowShape.X = orge.X - theMarkPicture.MouseDownDelt.X;
+#pragma warning restore CS1690 // 访问引用封送类的字段上的成员可能导致运行时异常
+                        ShowShape.Y = orge.Y - theMarkPicture.MouseDownDelt.Y;
+                        //if (parent != null) this.MoveToRange(parent);
+                        //this.MoveSub(new Point(Rectangle.X - oldpos.X, Rectangle.Y - oldpos.Y));
+                    }
+                    return;
+                case Direction.outside:
+                default:
+                    //#warning should not come here
+                    break;
+            }
+            if (ShowShape.Width <= 0) ShowShape.Width = min;
+            if (ShowShape.Height <= 0) ShowShape.Height = min;
+        }
         /// <summary>
         /// 根据鼠标位置获取选中的Win
         /// </summary>
@@ -68,12 +151,12 @@ namespace SPI.SPICheckWin
         /// <returns></returns>
         public WinBase FindMouseOnRect(Point de)
         {
-            if (SubWinList?.Count == 0)
+            if (SubWinList == null || SubWinList.Count == 0)
                 return this;
             WinBase centerRect = null;
             foreach (WinBase rct in SubWinList ?? new List<WinBase>())
             {
-                Direction dtemp = MouseOverWhere(de);
+                Direction dtemp = rct.MouseOverWhere(de);
                 switch (dtemp)
                 {
                     case Direction.outside:
@@ -88,9 +171,9 @@ namespace SPI.SPICheckWin
                 }
             }
             if (centerRect == null)
-                return null;
+                return this;
             WinBase win = centerRect.FindMouseOnRect(de);
-            if (win!=null)
+            if (win != null)
             {
                 return win;
             }

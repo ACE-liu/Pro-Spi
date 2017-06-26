@@ -20,6 +20,7 @@ namespace SPI
         private SPIProgramForm()
         {
             InitializeComponent();
+            theMarkPicture = markedPicture1;
         }
         public static SPIProgramForm GetInstance()
         {
@@ -81,6 +82,11 @@ namespace SPI
             {
                 markedPicture1.ChangeShowLevel(level, ct.X, ct.Y);
             }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            markedPicture1.AddWin(new Chip());
         }
     }
 }

@@ -34,10 +34,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.DoubleBuffered = true;
             this.Name = "MarkedPicture";
             this.Size = new System.Drawing.Size(1006, 646);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MarkedPicture_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MarkedPicture_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MarkedPicture_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MarkedPicture_MouseUp);
             this.ResumeLayout(false);
 

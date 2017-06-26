@@ -21,7 +21,7 @@ namespace SPI
             //tab.TabPages[0]
             //tabControl1
             TheBoard = new Board();
-
+            CurFocus = TheBoard;
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)

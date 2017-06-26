@@ -9,48 +9,77 @@ using static SPI.Global.Configuration;
 
 namespace SPI.SPIModel
 {
-    public class RectangleMode:ShapeBase
+    internal class RectangleMode:ShapeBase
     {
         private Point center = Point.Empty;
         private ShapeType m_ShapeType = ShapeType.None;
     
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get;  set; }
-        public int Height { get;  set; }
-        public Point MarkShift { get; set; } = Point.Empty;
-        public Rectangle MRectangle { get { return new Rectangle(X + MarkShift.X, Y + MarkShift.Y, Width, Height); } }
+        public override int X { get; set; }
+        public override int Y { get; set; }
+        public override int Width { get;  set; }
+        public override int Height { get;  set; }
+        public override Point Location
+        {
+            get
+            {
+                return new Point(X, Y);
+            }
 
-        public Point GetCenter()
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+        internal override Point MarkShift { get; set; } = Point.Empty;
+        internal override Rectangle MRectangle { get { return new Rectangle(X + MarkShift.X, Y + MarkShift.Y, Width, Height); } }
+
+        internal override Point GetCenter()
         {
             return new Point(X + Width / 2,Y + Height / 2);
         }
+        internal override void Move(Point p)
+        {
+            this.X += p.X;
+            this.Y += p.Y;
+        }
+        /// <summary>
+        /// 将图形在板中坐标转化为在MarkedPicture中的坐标；
+        /// </summary>
+        /// <returns></returns>
+        internal override Point ChangeToShowPoint()
+        {
+            return new Point(MarkedPicture.PosToShowX(X), MarkedPicture.PosToShowY(Y));
+        }
         /*默认构造函数*/
-        public RectangleMode()
+        internal RectangleMode()
         {
             this.Width = 30;
             this.Height = 30;
             this.m_ShapeType = ShapeType.Rectangle;
+            
         }
-        public RectangleMode(int width, int height)
+        internal RectangleMode(int width, int height)
         {
             this.Width = width;
             this.Height = height;
             this.m_ShapeType = ShapeType.Rectangle;
         }
-        public ShapeType GetShapeType()
+        internal override ShapeType GetShapeType()
         {
             return m_ShapeType;
         }
-        public bool OnFocus()
+        internal override bool OnFocus()
         {
             return CurFocus.ShowShape == this;
         }
-        public void DrawSelf(Graphics g)
+        internal override void DrawSelf(Graphics g,Pen p)
         {
-            g.DrawRectangle(GetPenByShape(this, 1), X, Y, Width, Height);
+            g.DrawRectangle(p, new Rectangle(ChangeToShowPoint(), new Size(Width, Height)));
         }
-        public Direction MouseOverWhere(Point e)
+        internal override void ChangeSelf(Direction de)
+        { }
+        internal override Direction MouseOverWhere(Point e)
         {
             int nowdelt = (int)(mdelt / MarkedPicture.CurDisplayRate);
             if ((e.X < MRectangle.Left - nowdelt) || (e.X > MRectangle.Right + nowdelt) || (e.Y < MRectangle.Top - nowdelt) || (e.Y > MRectangle.Bottom + nowdelt))

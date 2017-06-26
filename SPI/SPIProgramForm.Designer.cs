@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SPIProgramForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabLeft = new System.Windows.Forms.TabControl();
             this.tabFocus = new System.Windows.Forms.TabPage();
@@ -36,6 +37,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.markedPicture1 = new SPI.MarkedPicture();
             this.PlHead = new System.Windows.Forms.Panel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -46,6 +49,8 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.PlHead.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -134,7 +139,7 @@
             // 
             this.markedPicture1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.markedPicture1.BackColor = System.Drawing.SystemColors.Control;
+            this.markedPicture1.BackColor = System.Drawing.SystemColors.ControlText;
             this.markedPicture1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.markedPicture1.Location = new System.Drawing.Point(3, 190);
             this.markedPicture1.Name = "markedPicture1";
@@ -146,10 +151,33 @@
             this.PlHead.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PlHead.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PlHead.Controls.Add(this.toolStrip1);
             this.PlHead.Location = new System.Drawing.Point(3, 3);
             this.PlHead.Name = "PlHead";
             this.PlHead.Size = new System.Drawing.Size(1356, 181);
             this.PlHead.TabIndex = 0;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.AutoSize = false;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1354, 45);
+            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.AutoSize = false;
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(44, 44);
+            this.toolStripButton1.Text = "添加元件";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // SPIProgramForm
             // 
@@ -169,6 +197,9 @@
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            this.PlHead.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -183,5 +214,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Panel PlHead;
         private MarkedPicture markedPicture1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }
