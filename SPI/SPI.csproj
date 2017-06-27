@@ -118,6 +118,7 @@
     <Compile Include="SPICheckWin\CheckWinBase.cs" />
     <Compile Include="SPICheckWin\Chip.cs" />
     <Compile Include="SPICheckWin\MarkPoint.cs" />
+    <Compile Include="SPICheckWin\SubBoard.cs" />
     <Compile Include="SPICheckWin\WinBase.cs" />
     <Compile Include="SPIModel\CircleMode.cs" />
     <Compile Include="SPIModel\RectangleMode.cs" />

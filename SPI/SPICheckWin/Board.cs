@@ -50,6 +50,7 @@ namespace SPI.SPICheckWin
         {
             win.ShowShape.ShiftCenterTo(Location);
             SubWinList?.Add(win);
+            win.Parent = this;
         }
         public void RemoveWin(WinBase win)
         {

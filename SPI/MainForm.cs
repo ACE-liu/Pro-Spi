@@ -47,6 +47,7 @@ namespace SPI
                     form.Dock = DockStyle.Fill;
                     spDivide.Panel2.Controls.Clear();
                     spDivide.Panel2.Controls.Add(form);
+                    form.OnFirstLoadOnMainform();
                 }
                 else if (e.ClickedItem == tbMaintain)
                 {

@@ -37,7 +37,7 @@ namespace SPI.SPICheckWin
         protected WinType wType = WinType.None;
         public ShapeBase ShowShape { get; protected set; } = null;
         public abstract void Show(Graphics g);
-
+        internal WinBase Parent = null;
         /// <summary>
         /// 计算鼠标相对本检查框处于哪个位置。
         /// 鼠标位置已转换为板坐标。
@@ -82,10 +82,29 @@ namespace SPI.SPICheckWin
             Point e = MarkedPicture.ShowToPos(me);
             ChangeSelf(e);
 
-            //if (this.parent != null)
-            //    this.ShrinkToRange(parent);
-            //this.ExpandToIncludeSubs(changingEdge);
+            if (Parent != null)
+                this.ShrinkToRange(Parent);
+            this.ExpandToIncludeSubs(MarkedPicture.ChangingEdge);
             return;
+        }
+        public void ShrinkToRange(WinBase win)
+        {
+            ShowShape.ShrinkToRange(win.ShowShape);
+        }
+        /// <summary>
+        /// 扩展自身范围以便包含所有子项范围.
+        /// </summary>
+        /// <param name="edge">当前正在修改的边</param>
+        private void ExpandToIncludeSubs(Direction edge)
+        {
+            if (SubWinList==null)
+            {
+                return;
+            }
+            foreach (WinBase win in SubWinList)
+            {
+                ShowShape.ExpandToInclude(win.ShowShape,edge);
+            }
         }
         /// <summary>
         /// 根据鼠标位置改变自身大小或位置。鼠标位置已转换为板左边。
@@ -132,8 +151,8 @@ namespace SPI.SPICheckWin
                         ShowShape.X = orge.X - theMarkPicture.MouseDownDelt.X;
 #pragma warning restore CS1690 // 访问引用封送类的字段上的成员可能导致运行时异常
                         ShowShape.Y = orge.Y - theMarkPicture.MouseDownDelt.Y;
-                        //if (parent != null) this.MoveToRange(parent);
-                        //this.MoveSub(new Point(Rectangle.X - oldpos.X, Rectangle.Y - oldpos.Y));
+                        if (Parent != null) this.MoveToRange(Parent);
+                        this.MoveSub(new Point(ShowShape.X - oldpos.X, ShowShape.Y - oldpos.Y));
                     }
                     return;
                 case Direction.outside:
@@ -143,6 +162,21 @@ namespace SPI.SPICheckWin
             }
             if (ShowShape.Width <= 0) ShowShape.Width = min;
             if (ShowShape.Height <= 0) ShowShape.Height = min;
+        }
+        protected void MoveToRange(WinBase parent)
+        {
+            ShowShape.MoveToRange(parent.ShowShape);
+        }
+        protected void MoveSub(Point shift)
+        {
+            if (SubWinList==null)
+            {
+                return;
+            }
+            foreach (var item in SubWinList)
+            {
+                item.Move(shift);
+            }
         }
         /// <summary>
         /// 根据鼠标位置获取选中的Win

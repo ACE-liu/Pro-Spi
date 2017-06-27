@@ -21,6 +21,8 @@ namespace SPI.SPICheckWin
         internal bool hasTested = false;
         public Point MarkShift=>ShowShape.MarkShift;
 
+        
+
         #endregion
 
         #region************Method****************

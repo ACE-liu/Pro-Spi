@@ -18,6 +18,8 @@ namespace SPI.SPIModel
         public override int Y { get; set; }
         public override int Width { get; set; }
         public override int Height { get; set; }
+        public override int Bottom => Y + Height;
+        public override int Right => X + Width;
         public override Point Location
         {
             get
@@ -59,6 +61,58 @@ namespace SPI.SPIModel
         {
             this.X += p.X;
             this.Y += p.Y;
+        }
+        internal override void ExpandToInclude(ShapeBase other,Direction edge)
+        {
+            if (edge == Direction.center)
+            {
+                if (other.X < this.X) this.X = other.X;
+                if (other.Y < this.Y) this.Y = other.Y;
+                if (other.Right > this.Right) this.X = other.Right - this.Width;
+                if (other.Bottom > this.Bottom) this.Y = other.Bottom - this.Height;
+            }
+            else
+            {
+                if (other.X < this.X) { this.Width += (this.X - other.X); this.X = other.X; }
+                if (other.Y < this.Y) { this.Height += (this.Y - other.Y); this.Y = other.Y; }
+                if (other.Right > this.Right) this.Width = other.Right - this.X;
+                if (other.Bottom > this.Bottom) this.Height = other.Bottom - this.Y;
+            }
+        }
+        /// <summary>
+        /// 将方框压缩到指定范围.
+        /// </summary>
+        /// <param name="rt">压缩到此范围</param>
+        internal override void ShrinkToRange(ShapeBase other)
+        {
+            if (X < other.X)
+            {
+                Width -= other.X - X;
+                X = other.X;
+            }
+            if (Y < other.Y)
+            {
+                Height -= other.Y - Y;
+                Y = other.Y;
+            }
+            if (Right > other.Right)
+            {
+                Width = other.Right - X;
+            }
+            if (Bottom > other.Bottom)
+            {
+                Height = other.Bottom - Y;
+            }
+            if (Width < min)
+            {
+                Width = min;
+                if (Right > other.Right) X = other.Right - Width;
+            }
+            if (Height < min)
+            {
+                Height = min;
+                if (Bottom > other.Bottom) Y = other.Bottom - Height;
+            }
         }
         internal override bool OnFocus()
         {

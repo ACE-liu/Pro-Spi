@@ -26,6 +26,10 @@ namespace SPI
         /// </summary>
         const int DisplayLevelNum = 15; // 加大不影响效率和内存. 10对应最小缩小比例为2/2Exp(10)=1/512,800*600尺寸的MarkedPicture可显示600*512>300000点的板,对10um分辨率,宽度大于3m.
         /// <summary>
+        /// 最大显示比例
+        /// </summary>
+        const int MaxDisplayRate = 2;
+        /// <summary>
         /// 原始大小的图对应的显示级别,常量
         /// </summary>
         const int OrgPictureLevel = 1;//Level of the orignal picture. MaxDisplayRete/Exp(2,OrgPictureLevel) should be 1;
@@ -41,7 +45,10 @@ namespace SPI
         /// 当前显示级别
         /// </summary>
         private static int CurDisplayLevel;
-
+        /// <summary>
+        /// 实际使用的显示级别数.
+        /// </summary>
+        private static int UsedLevels;
         /// <summary>
         /// 当前显示比例.
         /// </summary>
@@ -78,24 +85,95 @@ namespace SPI
         /// 用于计算拖动时的辅助量，保存鼠标按下时界面的状态值
         /// </summary>
         public Point MouseDownDelt = Point.Empty;
+        /// <summary>
+        /// 当前背景图是否可用，
+        /// </summary>
+        private bool CanvasOK =false;
 
         #endregion
         public MarkedPicture()
         {
             InitializeComponent();
-            SetXY(0, 0);
             CurDisplayRate = 1;
         }
         internal void ChangeShowLevel(int delt, int x, int y)
-        { }
+        {
+            ////保存修改前鼠标对应的板坐标.
+            Point p0 = ShowToPos(new Point(x, y));
 
+            //改变显示比例
+            int l = CurDisplayLevel + delt;
+            if (l < 0)
+                CurDisplayLevel = 0;
+            else if (l >= UsedLevels)
+                CurDisplayLevel = UsedLevels - 1;
+            else
+                CurDisplayLevel = l;
+            MarkedPicture.CurDisplayRate = rateMap[CurDisplayLevel];
+
+            //移动显示范围以保持鼠标点对应的板坐标不变.
+            SetNoMove(x, y, p0.X, p0.Y);
+
+            InvalidateCanvas();
+        }
+        /// <summary>
+        /// 初始化.为保证与板相关的变量在板信息已被读取后计算,在此处初始化并调入上次处理的板信息.
+        /// </summary>
+        public void InitializeVariables()
+        {
+            rateMap = new double[DisplayLevelNum];
+            rateMap[0]=MaxDisplayRate;
+            for (int i = 1; i < DisplayLevelNum; i++)
+            {
+                rateMap[i] = rateMap[i - 1] / 2;
+            }
+            TheBoard = new Board();//Initialize program.
+            //Globles.theBoard.LoadLastData();
+            CurDisplayLevel = 2;//Display rate 0.5
+            CurDisplayRate = rateMap[CurDisplayLevel];                 //Used when buffered picture show in screen;
+            //InitPiecesVariables();
+            SetXY(0, 0);
+            SetFocus(TheBoard);
+
+        }
+        internal void OnFirstLoad()
+        {
+            InitializeVariables();
+        }
+        /// <summary>
+        /// 保持修改级别前后鼠标点位置对应的板位置不变.
+        /// </summary>
+        /// <param name="mx">鼠标位置X</param>
+        /// <param name="my">鼠标位置y</param>
+        /// <param name="px">改变比例前鼠标点对应的的板坐标X</param>
+        /// <param name="py">改变比例前鼠标点对应的的板坐标y</param>
+        private void SetNoMove(int mx, int my, int px, int py)
+        {
+            int x0 = (int)(px - mx / CurDisplayRate);
+            int y0 = (int)(py - my / CurDisplayRate);
+            if (CurDisplayRate > 1)
+            {
+                int intrate = (int)CurDisplayRate;
+                x0 += mx % intrate;
+                y0 += my % intrate;
+            }
+            SetXY(x0, y0);
+        }
+        /// <summary>
+        /// 更新背景图片，并刷新显示。
+        /// </summary>
+        internal void InvalidateCanvas()
+        {
+            CanvasOK = false;
+            Invalidate();
+        }
         private void MarkedPicture_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             PaintTheBoard(sender, e);
             //***** 画中心位置十字叉
-            g.DrawLine(Pens.Gray, new Point(Width / 2, 0), new Point(Width / 2, Height));
-            g.DrawLine(Pens.Gray, new Point(0, Height / 2), new Point(Width, Height / 2));
+            g.DrawLine(Pens.Gray, new Point(ClientRectangle.Width / 2, 0), new Point(ClientRectangle.Width / 2, ClientRectangle.Height));
+            g.DrawLine(Pens.Gray, new Point(0, ClientRectangle.Height / 2), new Point(ClientRectangle.Width, ClientRectangle.Height / 2));
         }
         /// <summary>
         /// 将显示区域的左上角设置的指定板坐标位置.
@@ -151,6 +229,15 @@ namespace SPI
         public static int PosToShowY(int y)
         {
             return (int)((y - showPart.Y) * MarkedPicture.CurDisplayRate);
+        }
+        /// <summary>
+        /// 板坐标到显示坐标。
+        /// </summary>
+        /// <param name="rct">板坐标的矩形位置</param>
+        /// <returns>显示坐标的矩形位置</returns>
+        public Rectangle PosToShow(Rectangle rct)
+        {
+            return new Rectangle(PosToShowX(rct.X), PosToShowY(rct.Y), (int)(rct.Width * MarkedPicture.CurDisplayRate), (int)(rct.Height * MarkedPicture.CurDisplayRate));
         }
         public static Point ShowToPos(Point p)
         {
@@ -237,7 +324,7 @@ namespace SPI
             {
                 WinBase mouseFocus = TheBoard?.FindMouseOnRect(de);
 
-                if ((mouseFocus == CurFocus) /*&& (CurFocus !=TheBoard)*/)
+                if ((mouseFocus == CurFocus) && (CurFocus != TheBoard))
                 {
                     //鼠标移动到当前焦点的范围内时，根据相对位置设置鼠标形状指示将改变哪个边。
                     SetCursor(de);

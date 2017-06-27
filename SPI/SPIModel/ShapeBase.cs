@@ -22,6 +22,8 @@ namespace SPI.SPIModel
         public abstract int Width { get; set; }
         public abstract int Height { get; set; }
         public abstract Point Location { get; set; }
+        public abstract int Right { get; }
+        public abstract int Bottom { get; }
         internal abstract Rectangle MRectangle { get; }
         internal abstract Point GetCenter();
         internal abstract ShapeType GetShapeType();
@@ -32,11 +34,24 @@ namespace SPI.SPIModel
         internal abstract void ChangeSelf(Direction dt);
         internal abstract void Move(Point p);
         internal abstract Point ChangeToShowPoint();
-
+        internal abstract void ShrinkToRange(ShapeBase other);
+        internal abstract void ExpandToInclude(ShapeBase other,Direction edge);
+        /// <summary>
+        /// 辅助将原件每次添加在MarkPicture中间
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="displayRate"></param>
         internal virtual void ShiftCenterTo(Point location)
         {
-            X = location.X - Width / 2;
-            Y = location.Y - Height / 2;
+            X = location.X - (int)(Width / 2);
+            Y = location.Y - (int)(Height / 2);
+        }
+        internal virtual void MoveToRange(ShapeBase parent)
+        {
+            if (X < parent.X) X = parent.X;
+            if (Y < parent.Y) Y = parent.Y;
+            if (Right > parent.Right) X = parent.Right - Width;
+            if (Bottom > parent.Bottom) Y = parent.Bottom - Height;
         }
     }
 }

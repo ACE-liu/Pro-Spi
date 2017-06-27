@@ -139,7 +139,7 @@
             // 
             this.markedPicture1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.markedPicture1.BackColor = System.Drawing.SystemColors.ControlText;
+            this.markedPicture1.BackColor = System.Drawing.SystemColors.Control;
             this.markedPicture1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.markedPicture1.Location = new System.Drawing.Point(3, 190);
             this.markedPicture1.Name = "markedPicture1";
