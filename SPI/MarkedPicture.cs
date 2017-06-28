@@ -96,6 +96,7 @@ namespace SPI
             InitializeComponent();
             CurDisplayRate = 1;
         }
+
         internal void ChangeShowLevel(int delt, int x, int y)
         {
             ////保存修改前鼠标对应的板坐标.
@@ -109,7 +110,7 @@ namespace SPI
                 CurDisplayLevel = UsedLevels - 1;
             else
                 CurDisplayLevel = l;
-            MarkedPicture.CurDisplayRate = rateMap[CurDisplayLevel];
+            CurDisplayRate = rateMap[CurDisplayLevel];
 
             //移动显示范围以保持鼠标点对应的板坐标不变.
             SetNoMove(x, y, p0.X, p0.Y);
@@ -127,8 +128,11 @@ namespace SPI
             {
                 rateMap[i] = rateMap[i - 1] / 2;
             }
-            TheBoard = new Board();//Initialize program.
-            //Globles.theBoard.LoadLastData();
+            if (TheBoard==null)
+            {
+                TheBoard = new Board();//Initialize program.
+            }
+            UsedLevels = 6;
             CurDisplayLevel = 2;//Display rate 0.5
             CurDisplayRate = rateMap[CurDisplayLevel];                 //Used when buffered picture show in screen;
             //InitPiecesVariables();
@@ -136,6 +140,9 @@ namespace SPI
             SetFocus(TheBoard);
 
         }
+        /// <summary>
+        /// 初始化MP
+        /// </summary>
         internal void OnFirstLoad()
         {
             InitializeVariables();

@@ -36,6 +36,7 @@ namespace SPI.SPIModel
         internal abstract Point ChangeToShowPoint();
         internal abstract void ShrinkToRange(ShapeBase other);
         internal abstract void ExpandToInclude(ShapeBase other,Direction edge);
+        internal double Angle=0;
         /// <summary>
         /// 辅助将原件每次添加在MarkPicture中间
         /// </summary>

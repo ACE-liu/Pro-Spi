@@ -34,6 +34,9 @@ namespace SPI.Global
         internal static Point DefaultLocation = Point.Empty;
         /*当前操作的板*/
         internal static Board TheBoard = null;
+        /// <summary>
+        /// 保存配置FOV大小
+        /// </summary>
         internal static Size FovSize;
         /// <summary>
         /// 为了方便操作坐标及其他数据，在加载MP时保存全局的mp指针；

@@ -18,12 +18,40 @@ namespace SPI
         public MainForm()
         {
             InitializeComponent();
-            //tab.TabPages[0]
-            //tabControl1
-            TheBoard = new Board();
-            CurFocus = TheBoard;
+            LoadLastProgramMsg();
+            onLoadRunForm();
         }
-
+        /// <summary>
+        /// 打开程序编辑界面
+        /// </summary>
+        private void onLoadProgramForm()
+        {
+            SPIProgramForm form = SPIProgramForm.GetInstance();
+            form.Dock = DockStyle.Fill;
+            spDivide.Panel2.Controls.Clear();
+            spDivide.Panel2.Controls.Add(form);
+            form.OnFirstLoadOnMainform();
+        }
+        /// <summary>
+        /// 打开运行界面
+        /// </summary>
+        private void onLoadRunForm()
+        {
+            SPIRunForm form = SPIRunForm.GetInstance();
+            form.Dock = DockStyle.Fill;
+            spDivide.Panel2.Controls.Clear();
+            spDivide.Panel2.Controls.Add(form);
+        }
+        /// <summary>
+        /// 加载上一次程序信息；
+        /// </summary>
+        private void LoadLastProgramMsg()
+        { }
+        /// <summary>
+        /// 打开维修站
+        /// </summary>
+        private void onLoadMatainForm()
+        { }
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem == CurSelectedItem)
@@ -36,22 +64,15 @@ namespace SPI
                 CurSelectedItem = e.ClickedItem;
                 if (e.ClickedItem == tbRun)
                 {
-                    SPIRunForm form = SPIRunForm.GetInstance();
-                    form.Dock = DockStyle.Fill;
-                    spDivide.Panel2.Controls.Clear();
-                    spDivide.Panel2.Controls.Add(form);
+                    onLoadRunForm();
                 }
                 else if (e.ClickedItem == tbProgram)
                 {
-                    SPIProgramForm form = SPIProgramForm.GetInstance();
-                    form.Dock = DockStyle.Fill;
-                    spDivide.Panel2.Controls.Clear();
-                    spDivide.Panel2.Controls.Add(form);
-                    form.OnFirstLoadOnMainform();
+                    onLoadProgramForm();
                 }
                 else if (e.ClickedItem == tbMaintain)
                 {
-
+                    onLoadMatainForm();
                 }
             }
         }

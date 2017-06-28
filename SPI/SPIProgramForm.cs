@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SPI.SPICheckWin;
 
 using static SPI.Global.Configuration;
+using SPI.SPIModel;
 
 namespace SPI
 {
@@ -76,7 +77,8 @@ namespace SPI
             Point ct;
             if (picRect.Contains(e.Location))
             {
-                ct = new Point(e.X - markedPicture1.Left, e.Y - markedPicture1.Top);
+               // ct = new Point(e.X - markedPicture1.Left, e.Y - markedPicture1.Top);
+                ct = new Point(e.X - picRect.Left, e.Y - picRect.Top); /*鼠标位置是相对整个窗口 ，markedpicture1的坐标是相对父容器的，所以要返回顶层 */
             }
             else
                 return;
@@ -94,9 +96,26 @@ namespace SPI
             markedPicture1.AddWin(win);
             SetFocus(win);
         }
+        /// <summary>
+        /// 新建程序
+        /// </summary>
+        private void buildNewProgram()
+        {
+
+        }
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             AddComponent(new Chip());
+        }
+
+        private void tbNewProgram_Click(object sender, EventArgs e)
+        {
+            buildNewProgram();
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            AddComponent(new Chip(new CircleMode()));
         }
     }
 }

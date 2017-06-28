@@ -14,6 +14,7 @@ namespace SPI.SPIModel
         private Point center = Point.Empty;
         private ShapeType m_ShapeType = ShapeType.None;
 
+        private bool IsMouseOnRange = false;
         public override int X { get; set; }
         public override int Y { get; set; }
         public override int Width { get; set; }
@@ -129,51 +130,52 @@ namespace SPI.SPIModel
         }
         internal override void DrawSelf(Graphics g,Pen p)
         {
-            g.DrawEllipse(p, new RectangleF(ChangeToShowPoint(),new Size(Width,Height)));
+            g.DrawEllipse(p, theMarkPicture.PosToShow(MRectangle));
+            if (IsMouseOnRange)
+            {
+                Pen p1 = new Pen(Color.Gray, 1);
+                p1.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                g.DrawRectangle(p1, theMarkPicture.PosToShow(MRectangle));
+                p1.Dispose();
+            }
+           // g.DrawEllipse(p, new RectangleF(ChangeToShowPoint(),new Size(Width,Height)));
         }
         internal override void ChangeSelf(Direction dt)
         {
         }
         internal override Direction MouseOverWhere(Point e)
         {
+            IsMouseOnRange = false;
             int nowdelt = (int)(mdelt / MarkedPicture.CurDisplayRate);
-            int direction = CalculateDirec(ShiftCenter, e);
-            if (direction> mdelt+nowdelt)
-            {
+            if ((e.X < MRectangle.Left - nowdelt) || (e.X > MRectangle.Right + nowdelt) || (e.Y < MRectangle.Top - nowdelt) || (e.Y > MRectangle.Bottom + nowdelt))
                 return Direction.outside;
-            }
-            else if(direction<=mdelt+nowdelt&&direction>=mdelt-nowdelt)
+
+            bool left = (e.X >= MRectangle.Left - nowdelt) && (e.X <= MRectangle.Left + nowdelt);
+            bool right = (e.X >= MRectangle.Right - nowdelt) && (e.X <= MRectangle.Right + nowdelt);
+            bool top = (e.Y >= MRectangle.Top - nowdelt) && (e.Y <= MRectangle.Top + nowdelt);
+            bool bottom = (e.Y >= MRectangle.Bottom - nowdelt) && (e.Y <= MRectangle.Bottom + nowdelt);
+
+            Direction mystate = Direction.outside;
+            if (top)
             {
-                //再判断...
-                if (e.X==ShiftCenter.X&&e.Y<ShiftCenter.Y)
-                {
-                    return Direction.top;
-                }
-                else if (e.X == ShiftCenter.X && e.Y > ShiftCenter.Y)
-                {
-                    return Direction.bottom;
-                }
-                else if (e.X<ShiftCenter.X&& e.Y < ShiftCenter.Y)
-                {
-                    return Direction.topLeft;
-                }
-                else if(e.X < ShiftCenter.X && e.Y > ShiftCenter.Y)
-                {
-                    return Direction.bottomLeft;
-                }
-                else if (e.X>ShiftCenter.X&&e.Y<ShiftCenter.Y)
-                {
-                    return Direction.topRight;
-                }
-                else
-                {
-                    return Direction.bottomRight;
-                }
+                if (left) { mystate = Direction.topLeft; }
+                else if (right) { mystate = Direction.topRight; }
+                else { mystate = Direction.top; }
+            }
+            else if (bottom)
+            {
+                if (left) { mystate = Direction.bottomLeft; }
+                else if (right) { mystate = Direction.bottomRight; }
+                else { mystate = Direction.bottom; }
             }
             else
             {
-                return Direction.center;
+                if (left) { mystate = Direction.left; }
+                else if (right) { mystate = Direction.right; }
+                else { mystate = Direction.center; }
             }
+            IsMouseOnRange = true;
+            return mystate;
         }
     }
 }
