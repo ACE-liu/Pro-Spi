@@ -257,15 +257,37 @@ namespace SPI
         }
         private void MarkedPicture_MouseDown(object sender, MouseEventArgs e)
         {
+            ChangeFocus.CreateInstance()?.Hide();
             SetDownDelt(e.Location);
             if (e.Button == MouseButtons.Left)
             {
                 mouseDownPosition = e.Location;  //记录每次点击时鼠标按下的位置
                 MouseLeftDown = true;
             }
+            else if(e.Button==MouseButtons.Right)
+            {
+                if (CurFocus!=null&&CurFocus!=TheBoard)
+                {
+                    Point de = ShowToPos(e.Location);
+                    Direction dir = CurFocus.MouseOverWhere(de);
+                    if (dir>Direction.outside)
+                    {
+                        Point p = e.Location;
+                        ChangeFocus cf = ChangeFocus.CreateInstance();
+                        p.Offset(getRealLocation(this,theMainForm));
+                        cf.Location = p;
+                        if (cf.Bottom>Screen.PrimaryScreen.Bounds.Height)
+                        {
+                            p.Offset(0, -cf.Height);
+                            cf.Location = p;
+                        }
+                        cf.Show();
+                    }
+                }
+            }
             TheBoard?.OnMouseDown(sender,e);//ShowToPos(e.Location));
         }
-
+        
         private void MarkedPicture_MouseUp(object sender, MouseEventArgs e)
         {
             IsChangingWinNow = false;
@@ -275,6 +297,10 @@ namespace SPI
             }
             TheBoard?.OnMouseUp(sender,e);
             MouseLeftDown = false;
+            Refresh();
+        }
+        public void OnDataChanged()
+        {
             Refresh();
         }
         /// <summary>
@@ -320,6 +346,10 @@ namespace SPI
                 {
                     theMarkPicture.SetXY(MouseDownDelt.X - (int)(e.Location.X / CurDisplayRate), MouseDownDelt.Y - (int)(e.Location.Y / CurDisplayRate));
                 }
+                //else if ((CurFocus as MarkPoint)==null)
+                //{
+                    
+                //}
                 else
                     CurFocus?.ChangeRect(e.Location);
                 SetCursor(de);

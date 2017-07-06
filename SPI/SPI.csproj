@@ -98,12 +98,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeFocus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeFocus.Designer.cs">
+      <DependentUpon>ChangeFocus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DoubleEditorRangeForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DoubleEditorRangeForm.Designer.cs">
+      <DependentUpon>DoubleEditorRangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditorRangeForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EditorRangeForm.Designer.cs">
+      <DependentUpon>EditorRangeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MarkedPicture.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="MarkedPicture.Designer.cs">
       <DependentUpon>MarkedPicture.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyStream.cs" />
     <Compile Include="SPICheckWin\Board.cs" />
     <Compile Include="Global\Configuration.cs" />
     <Compile Include="Global\SpiBase.cs" />
@@ -135,6 +154,19 @@
     <Compile Include="SPIRunForm.Designer.cs">
       <DependentUpon>SPIRunForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SPIUi\UIBase.cs" />
+    <Compile Include="SPIUi\UIButton.cs" />
+    <Compile Include="SPIUi\UICheckBox.cs" />
+    <Compile Include="SPIUi\UIConfig.cs" />
+    <Compile Include="SPIUi\UIDoubleSlide.cs" />
+    <Compile Include="SPIUi\UIRadio.cs" />
+    <Compile Include="SPIUi\UISlide.cs" />
+    <EmbeddedResource Include="ChangeFocus.resx">
+      <DependentUpon>ChangeFocus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditorRangeForm.resx">
+      <DependentUpon>EditorRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -171,9 +203,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SPIAttribute\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

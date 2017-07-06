@@ -58,6 +58,13 @@ namespace SPI.SPIModel
         {
             return m_ShapeType;
         }
+        internal override Rectangle Rectangle
+        {
+            get
+            {
+                return new Rectangle(X, Y, Width, Height);
+            }
+        }
         internal override void Move(Point p)
         {
             this.X += p.X;

@@ -18,6 +18,7 @@ namespace SPI.SPICheckWin
     */
     class Board : WinBase
     {
+
         public Board()
         {
             ShowShape = new RectangleMode(800, 500);
@@ -99,12 +100,12 @@ namespace SPI.SPICheckWin
                     MarkedPicture.ChangingEdge = Direction.center;
                 }
             }
-            else if (e.Button == MouseButtons.Right)
-            {
-                //***** 右键按下时移动板显示位置。
-                SetFocus(TheBoard);
-                theMarkPicture.Cursor = Cursors.NoMove2D;
-            }
+            //else if (e.Button == MouseButtons.Right)
+            //{
+            //    //***** 右键按下时移动板显示位置。
+            //    SetFocus(TheBoard);
+            //    theMarkPicture.Cursor = Cursors.NoMove2D;
+            //}
         }
         internal void OnMouseUp(object sender, MouseEventArgs e)
         {

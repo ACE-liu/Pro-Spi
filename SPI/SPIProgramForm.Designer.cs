@@ -35,12 +35,12 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.markedPicture1 = new SPI.MarkedPicture();
             this.PlHead = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tbNewProgram = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.markedPicture1 = new SPI.MarkedPicture();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -110,6 +110,7 @@
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.AutoScroll = true;
             this.splitContainer3.Panel1.Controls.Add(this.button1);
             // 
             // splitContainer3.Panel2
@@ -121,7 +122,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(170, 129);
+            this.button1.Location = new System.Drawing.Point(163, 423);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(122, 41);
             this.button1.TabIndex = 0;
@@ -136,17 +137,6 @@
             this.button2.TabIndex = 1;
             this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
-            // 
-            // markedPicture1
-            // 
-            this.markedPicture1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.markedPicture1.BackColor = System.Drawing.SystemColors.Control;
-            this.markedPicture1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.markedPicture1.Location = new System.Drawing.Point(3, 190);
-            this.markedPicture1.Name = "markedPicture1";
-            this.markedPicture1.Size = new System.Drawing.Size(1353, 728);
-            this.markedPicture1.TabIndex = 1;
             // 
             // PlHead
             // 
@@ -204,6 +194,17 @@
             this.toolStripButton2.Text = "toolStripButton2";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
+            // markedPicture1
+            // 
+            this.markedPicture1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.markedPicture1.BackColor = System.Drawing.SystemColors.Control;
+            this.markedPicture1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.markedPicture1.Location = new System.Drawing.Point(3, 190);
+            this.markedPicture1.Name = "markedPicture1";
+            this.markedPicture1.Size = new System.Drawing.Size(1353, 728);
+            this.markedPicture1.TabIndex = 1;
+            // 
             // SPIProgramForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -243,5 +244,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton tbNewProgram;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private ChangeFocus changeFocus1;
     }
 }

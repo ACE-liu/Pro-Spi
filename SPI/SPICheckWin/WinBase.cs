@@ -14,6 +14,7 @@ namespace SPI.SPICheckWin
 {
     abstract class WinBase
     {
+        public event EventHandler DataChanged = null;
         #region ***************显示的属性*****************
         /// <summary>
         /// 窗口类型
@@ -30,7 +31,18 @@ namespace SPI.SPICheckWin
         /// </summary>
         [BrowsableAttribute(true), ReadOnlyAttribute(true), CategoryAttribute("一般信息"), DisplayName("ID")]
         public int ID { get { return id; } set { id = value; } }
+        [BrowsableAttribute(true), ReadOnlyAttribute(false), CategoryAttribute("位置信息"), DescriptionAttribute("左上角及尺寸"), DisplayName("窗口位置")]
+        public virtual Rectangle Position { get { return ShowShape.Rectangle; } }
+        [BrowsableAttribute(true), ReadOnlyAttribute(true), CategoryAttribute("位置信息"), DescriptionAttribute("中心位置"), DisplayName("中心位置")]
+        public Point Center { get { return ShowShape.GetCenter(); } }
+        [BrowsableAttribute(true), CategoryAttribute("位置信息"), DescriptionAttribute("右边界坐标"), DisplayName("右边界")]
+        public int Right { get { return ShowShape.Right; } }
+        [BrowsableAttribute(true), CategoryAttribute("位置信息"), DescriptionAttribute("下边界坐标"), DisplayName("下边界")]
+        public int Bottom { get { return ShowShape.Bottom; } }
+        [BrowsableAttribute(true), ReadOnlyAttribute(true), CategoryAttribute("一般信息")]
+        public virtual int SelectColors { get { return -1; } set { } }
         #endregion
+
         public string WinName;
         public List<WinBase> SubWinList = null;
         protected int id = -1;
@@ -57,6 +69,11 @@ namespace SPI.SPICheckWin
         {
             Move(new Point(x, y));
         }
+        public void ResizeAroundCenter(int width,int height)
+        {
+            ShowShape.ResizeAroundCenter(width,height);
+            MoveToRange(Parent);
+        }
         /// <summary>
         /// d1位置是否比d2位置关联更强.关联性按边界》中间》外边顺序排列.
         /// </summary>
@@ -69,10 +86,34 @@ namespace SPI.SPICheckWin
                 return false;
             return d1 > d2;
         }
-        public virtual void OnLoseFocus()
+        public void OnLoseFocus()
         { }
-        public virtual void OnFocus()
-        { }
+        /// <summary>
+        /// 获取到焦点处理
+        /// </summary>
+        public void OnFocus()
+        {
+            GetFocus();
+        }
+        public virtual void GetFocus()
+        {
+
+        }
+        /// <summary>
+        /// 检查窗的任何数据改变事件处理。
+        /// </summary>
+        public virtual void OnDataChange(object sender, EventArgs e)
+        {
+            if (DataChanged != null)
+            {
+                DataChanged(this, new EventArgs());
+            }
+            else
+            {
+                //Globles.theForm.RefreshPropertyGrid();
+                //Globles.markedPicture.Refresh();
+            }
+        }
         /// <summary>
         /// 根据鼠标位置改变框位置或尺寸.
         /// </summary>

@@ -34,6 +34,13 @@ namespace SPI.SPIModel
                 Y = value.Y;
             }
         }
+        internal override Rectangle Rectangle
+        {
+            get
+            {
+                return new Rectangle(X, Y, Width, Height);
+            }
+        }
         internal override Point MarkShift { get; set; } = Point.Empty;
         internal override Rectangle MRectangle { get { return new Rectangle(X + MarkShift.X, Y + MarkShift.Y, Width, Height); } }
 
@@ -111,8 +118,7 @@ namespace SPI.SPIModel
         {
             this.Width = 30;
             this.Height = 30;
-            this.m_ShapeType = ShapeType.Rectangle;
-            
+            this.m_ShapeType = ShapeType.Rectangle;         
         }
         internal RectangleMode(int width, int height)
         {

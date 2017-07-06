@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SPI.Global;
+using static SPI.Global.Configuration;
 
 namespace SPI.SPIModel
 {
@@ -24,6 +25,7 @@ namespace SPI.SPIModel
         public abstract Point Location { get; set; }
         public abstract int Right { get; }
         public abstract int Bottom { get; }
+        internal abstract Rectangle Rectangle { get; }
         internal abstract Rectangle MRectangle { get; }
         internal abstract Point GetCenter();
         internal abstract ShapeType GetShapeType();
@@ -53,6 +55,22 @@ namespace SPI.SPIModel
             if (Y < parent.Y) Y = parent.Y;
             if (Right > parent.Right) X = parent.Right - Width;
             if (Bottom > parent.Bottom) Y = parent.Bottom - Height;
+        }
+        internal virtual void ResizeAroundCenter(int width,int height)
+        {
+            this.Width += width;
+            this.Height += height;
+            this.X -= width / 2;
+            this.Y -= height / 2;
+            if (width<min)
+            {
+                width = min;
+            }
+            if (height<min)
+            {
+                height = min;
+            }
+       
         }
     }
 }

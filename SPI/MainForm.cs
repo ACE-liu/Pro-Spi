@@ -19,6 +19,7 @@ namespace SPI
         {
             InitializeComponent();
             LoadLastProgramMsg();
+            theMainForm = this;
             onLoadRunForm();
         }
         /// <summary>

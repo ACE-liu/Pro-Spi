@@ -22,6 +22,13 @@ namespace SPI
         {
             InitializeComponent();
             theMarkPicture = markedPicture1;
+            CurFocusPanel = splitContainer3.Panel1;
+            addEditor();
+        }
+        private void addEditor()
+        {
+            DoubleEditorRangeForm er = new DoubleEditorRangeForm("um",0,100,20,40,50,60,true);
+            splitContainer3.Panel1.Controls.Add(er);
         }
         private static bool isFirstLoad = false;
         public static SPIProgramForm GetInstance()
@@ -52,21 +59,7 @@ namespace SPI
                 theMarkPicture.OnFirstLoad();
             }
         }
-        /// <summary>
-        /// 获取窗体相对容器的容器的位置
-        /// </summary>
-        /// <param name="control"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        private Point getRealLocation(Control control , Control parent)
-        {
-            Point rtn = control.Location;
-            if (control.Parent!=parent)
-            {
-                return AddPoint(rtn, getRealLocation(control.Parent, parent));
-            }
-            return rtn;
-        }
+
         /// <summary>
         /// 处理鼠标滚动事件
         /// </summary>
@@ -117,5 +110,6 @@ namespace SPI
         {
             AddComponent(new Chip(new CircleMode()));
         }
+
     }
 }
