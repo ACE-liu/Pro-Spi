@@ -23,13 +23,13 @@ namespace SPI
             InitializeComponent();
             theMarkPicture = markedPicture1;
             CurFocusPanel = splitContainer3.Panel1;
-            addEditor();
         }
-        private void addEditor()
-        {
-            DoubleEditorRangeForm er = new DoubleEditorRangeForm("um",0,100,20,40,50,60,true);
-            splitContainer3.Panel1.Controls.Add(er);
-        }
+
+        //private void addEditor()
+        //{
+        //    DoubleEditorRangeForm er = new DoubleEditorRangeForm("um",0,100,20,40,50,60,true);
+        //    splitContainer3.Panel1.Controls.Add(er);
+        //}
         private static bool isFirstLoad = false;
         public static SPIProgramForm GetInstance()
         {

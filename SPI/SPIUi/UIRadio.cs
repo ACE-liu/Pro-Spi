@@ -20,10 +20,24 @@ namespace SPI.SPIUi
         private RadioButton rb;
 
         Panel follows = null;
+        bool _check;
+        public bool Check
+        {
+            get { return _check; }
+            set
+            {
+                if (follows != null)
+                {
+                    follows.Visible = value;
+                }
+                _check = value;
+            }
+        }
         public UIRadio(CheckWinBase win,int lvl ,bool isVisible , string text):base(win,lvl)
         {
             this.isVisible = isVisible;
             this.text = text;
+            Check = false;
         }
         /// <summary>
         /// 创建UI前先释放之前的资源，防止内存泄露
@@ -49,10 +63,10 @@ namespace SPI.SPIUi
             rb = new RadioButton(); rb.SuspendLayout();
             rb.Font = CurFocusPanel.Font;
 
-            rb.Left = ControlsGap;
+            rb.Left = ControlsGap*level;
             rb.Text = text;
             rb.AutoSize = true;
-            //rb.Checked = Check;
+            rb.Checked = Check;
             rb.ForeColor = rb.Checked ? Color.Black : Color.Gray;
             rb.CheckedChanged += new EventHandler(rb_CheckedChanged);
             rb.ResumeLayout();
@@ -61,28 +75,33 @@ namespace SPI.SPIUi
 
         private void rb_CheckedChanged(object sender, EventArgs e)
         {
-            if (follows!=null&&!HideFollows)
+            Check = rb.Checked;
+            rb.ForeColor = rb.Checked ? Color.Black : Color.Gray;
+            if (follows!=null&&HideFollows)
             {
-                if (rb.Checked)
-                {
-                    holder.RearrangeAllControl(follows, level + 1);
-                }
-                else
-                {
-                    follows.SuspendLayout();
-                    Relayout();
-                    //follows.ResumeLayout();
-                }
+                //if (rb.Checked)
+                //{
+                //    holder.RearrangeAllControl(follows, level + 1);
+                //}
+                //else
+                //{
+                //    follows.SuspendLayout();
+                //    Relayout();
+                //    //follows.ResumeLayout();
+                //}
+                holder.RearrangeAllControl(follows, level + 1);
             }
             holder?.OnDataChange(sender, e);
         }
         public override Panel AddFollows()
         {
             follows = new Panel();
-            follows.BorderStyle = BorderStyle.Fixed3D;
+            follows.BorderStyle = BorderStyle.FixedSingle;
+            follows.Width = CurFocusPanel.Width - ControlsGap * 2;
             follows.Left = rb.Left;
             follows.Top = rb.Bottom + ControlsGap;
             follows.VisibleChanged += new EventHandler(follows_VisibleChanged);
+            follows.Visible = Check;
             return follows;
         }
         public override void Add(Control ctr)
@@ -93,6 +112,7 @@ namespace SPI.SPIUi
             }
             else
                 follows.Controls.Add(ctr);
+            ResizeFollowSize(follows);
         }
         private void follows_VisibleChanged(object sender, EventArgs e)
         {

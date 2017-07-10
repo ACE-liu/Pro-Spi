@@ -68,7 +68,6 @@ namespace SPI.SPIUi
                 testItem = new Label(); 
                 testItem.Text = text;
                 testItem.Left = ControlsGap;
-                //lbPre.Width = ui.Width - 250;//185 pixels for left location fixed controls
                 testItem.AutoSize = true;
                 ui.Controls.Add(testItem);
             }
@@ -82,6 +81,9 @@ namespace SPI.SPIUi
                 slideControl.Top = ControlsGap;
             slideControl.Left = ControlsGap;
             ui.Controls.Add(slideControl);
+            //ui.Width = slideControl.Width;
+            //ui.Height = slideControl.Bottom + ControlsGap;
+            ui.ResumeLayout();
             return ui;
 
         }

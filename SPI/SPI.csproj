@@ -158,6 +158,7 @@
     <Compile Include="SPIUi\UIButton.cs" />
     <Compile Include="SPIUi\UICheckBox.cs" />
     <Compile Include="SPIUi\UIConfig.cs" />
+    <Compile Include="SPIUi\UIDoubleRadio.cs" />
     <Compile Include="SPIUi\UIDoubleSlide.cs" />
     <Compile Include="SPIUi\UIRadio.cs" />
     <Compile Include="SPIUi\UISlide.cs" />

@@ -37,9 +37,9 @@ namespace SPI.Global
         /*当前操作的板*/
         internal static Board TheBoard = null;
 
-        internal static int ControlsGap;
+        internal static int ControlsGap=6;
         internal static bool DataChanged = false;//标记数据已经改动可能需要保存
-        internal static bool HideFollows = false;
+        internal static bool HideFollows = true;
         /// <summary>
         /// 保存配置FOV大小
         /// </summary>
@@ -55,7 +55,7 @@ namespace SPI.Global
         /// 显示在markedPicture中的图像在主板中的位置。
         /// </summary>
         public static Rectangle showPart;
-        internal static bool ShowProperty = true;
+        internal static bool ShowProperty = false;
         #endregion
 
         #region***********Method***********

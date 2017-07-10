@@ -20,6 +20,21 @@ namespace SPI.SPIUi
         /// 下层UI容器
         /// </summary>
         Panel follows;
+
+        bool _check;
+        public bool Check
+        {
+            get { return _check; }
+            set
+            {
+                if (follows != null)
+                {
+                    follows.Visible = value;
+                }
+                _check = value;
+            }
+        }
+
         /// <summary>
         /// 默认构造函数
         /// </summary>
@@ -31,6 +46,7 @@ namespace SPI.SPIUi
             ui = null;
             this.isVisible = isVisible;
             this.strButtonName = strButtonName;
+            Check = false;
 
         }
         /// <summary>
@@ -65,6 +81,7 @@ namespace SPI.SPIUi
         {
             ui = new CheckBox();
             ui.SuspendLayout();
+            ui.Checked = _check;
             //ui.SizeChanged += new EventHandler(ui_SizeChanged);
             ui.CheckedChanged += Ui_CheckedChanged;
             ui.Appearance = Appearance.Button;
@@ -81,10 +98,11 @@ namespace SPI.SPIUi
         public override Panel AddFollows()
         {
             follows = new Panel();
-            follows.BorderStyle = BorderStyle.Fixed3D;
+            follows.BorderStyle = BorderStyle.FixedSingle;
             follows.Left = ui.Left;
             follows.Top = ui.Bottom + ControlsGap;
             follows.VisibleChanged += new EventHandler(follows_VisibleChanged);
+            follows.Visible = Check;
             return follows;
         }
         public override void Add(Control ctr)
@@ -95,6 +113,7 @@ namespace SPI.SPIUi
             }
             else
                 follows.Controls.Add(ctr);
+            ResizeFollowSize(follows);
         }
         private void follows_VisibleChanged(object sender, EventArgs e)
         {
@@ -103,17 +122,20 @@ namespace SPI.SPIUi
 
         private void Ui_CheckedChanged(object sender, EventArgs e)
         {
-            if (follows != null && !HideFollows)
+            Check = ui.Checked;
+            if (follows != null && HideFollows)
             {
-                if (ui.Checked)
-                {
-                    holder.RearrangeAllControl(follows, level + 1);
-                }
-                else
-                {
-                    follows.SuspendLayout();
-                    Relayout();
-                }
+                ResizeFollowSize(follows);
+                holder.RearrangeAllControl(follows, level + 1);
+                //if (ui.Checked)
+                //{
+                //    holder.RearrangeAllControl(follows, level + 1);
+                //}
+                //else
+                //{
+                //    follows.SuspendLayout();
+                //    Relayout();
+                //}
             }
             ui_DataChanged(sender, e);
         }

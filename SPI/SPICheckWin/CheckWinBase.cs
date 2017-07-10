@@ -69,16 +69,13 @@ namespace SPI.SPICheckWin
 
         public override void GetFocus()
         {
-            if (ShowProperty || this.uis.Count == 0)
+            if (ShowProperty || this.uis?.Count == 0)
             {
-                //Globles.theForm.SetPropertyFocus(this);
-
+                base.GetFocus();
             }
             else
             {
-                ///是否可创建UI控件,防止创建控件过于频繁导致的内存不足
                 SetCheckWindowFocus();
-
             }
         }
         /// <summary>
@@ -108,6 +105,14 @@ namespace SPI.SPICheckWin
             }
             if (c != CurFocusPanel)
                 throw new Exception("参数异常....");
+            //Relayout all the related controls
+            c = ctr;
+            for (int i = 0; i <= level-1; i++)
+            {
+                c = c.Parent;
+                RearrangeAControl(c);
+                //c = c.Parent;
+            }
             c = ctr;
             for (int i = 0; i <= level; i++)
             {
@@ -124,50 +129,115 @@ namespace SPI.SPICheckWin
         /// </summary>
         void SetCheckWindowFocus()
         {
-            //    //Globles.ShowingUI = true;
-            //    if (CurFocusPanel==null)
-            //    {
-            //        return;
-            //    }
-            //    CurFocusPanel.SuspendLayout();
-            //    while (Globles.panelCurFocus.Controls.Count > 0)
-            //    {
-            //        if (null != Globles.panelCurFocus.Controls[0])
-            //        {
-            //            Globles.panelCurFocus.CollectManualCreateComponentMemory(Globles.panelCurFocus.Controls[0]);
-            //        }
-            //    }
-            //    if (null != lastUis)
-            //    {
-            //        while (lastUis.Count > 0)
-            //        {
-            //            lastUis[0].DisposeUIManual();
-            //            lastUis.RemoveAt(0);
-            //        }
-            //    }
-            //    lastUis.Clear();
-            //    /*-end xiongyanan 20140625 */
-
-            //    Globles.propertyGrid1 = null;
-            //    //清空 Globles.panelCurFocus 容器并将新的UI界面放入其中。
-            //    Globles.panelCurFocus.Controls.Clear();
-            //    Panel pn = CreateUI();
-            //    if (pn != null)
-            //        Globles.panelCurFocus.Controls.Add(pn);
-            //    else
-            //        RmlDebug.Wrong("Null UI?");
-
-            //    //***** ???用于修正滚动条错误，可能已无用。
-            //    Globles.panelCurFocus.AutoScrollPosition = new Point(-p.X, -p.Y);
-
-            //    Globles.panelCurFocus.ResumeLayout();
-
-            //    //sw.Stop();
-            //    //RmlDebug.Prompt(sw.ElapsedMilliseconds.ToString());
-            //    //Globles.panelCurFocus.PerformLayout();
-
+            //Globles.ShowingUI = true;
+            if (CurFocusPanel == null)
+            {
+                return;
+            }
+            //Point p = CurFocusPanel.AutoScrollPosition;
+            CurFocusPanel.SuspendLayout();
+            CurFocusPanel.AutoScrollPosition = new Point(0, 0);
+            //Point p = CurFocusPanel.AutoScrollPosition;
+            while (CurFocusPanel.Controls.Count > 0)
+            {
+                if (null != CurFocusPanel.Controls[0])
+                {
+                    CollectManualCreateComponentMemory(CurFocusPanel.Controls[0]);
+                }
+            }
+            CurFocusPanel.Controls.Clear();
+            Panel pn = CreateUI();
+            if (pn != null)
+            {
+                CurFocusPanel.Controls.Add(pn);
+            }
+            //else
+            //    //RmlDebug.Wrong("Null UI?");
+            //CurFocusPanel.AutoScrollPosition = new Point(-p.X, -p.Y);
+            CurFocusPanel.ResumeLayout(true);
         }
-    #endregion
+        public virtual Panel CreateUI()
+        {
+            Panel container = new Panel();  //Container of all the UI components of this class.It will be returned.
+            container.SuspendLayout();
+            UIBase[] lastContainer = new UIBase[5];
+            int lastlevel = 0;
+            if (uis.Count > 0) lastlevel = uis[0].level;
+            lastContainer[lastlevel] = null;
+            //***** 根据uis内UI的层级确定各UI的归宿。
+            //若下一UI的层级大于本UI，则该控件为本UI的子级
+            //否则，则属于前面最接近的低一层级的UI的子级
+            for (int i = 0; i < uis.Count; i++)
+            {       
+                //if ((uis[i].expertOnly && !Globles.CurUser.IsExpert()) || !uis[i].NeedShow())
+                //    continue;
 
-}
+                int thislevel = uis[i].level;
+
+                //处理层次变化
+                if (i > 0)
+                {
+                    if (thislevel > lastlevel)
+                    {
+                        if (lastlevel == 0)
+                            container.Controls.Add(lastContainer[lastlevel].AddFollows());
+                        else
+                            lastContainer[lastlevel - 1].Add(lastContainer[lastlevel].AddFollows());
+                    }
+                    else if (thislevel < lastlevel)
+                    {
+                        for (int j = lastlevel; j > thislevel; j--)
+                        {
+                            lastContainer[j - 1].Relayout();
+                        }
+                    }
+                }
+                //在需要显示时创建该UIBase对象对应的UI，加入到子层或根控件。
+                if (uis[i].NeedShow())
+                {
+                    Control ui = uis[i].CreateUI();
+                    if (thislevel == 0)
+                        container.Controls.Add(ui);
+                    else
+                        lastContainer[thislevel - 1].Add(ui);
+
+                    lastlevel = thislevel;//不需要搬出if。若不需要显示，在控件显示界面上可视为无此ui。???可能需要测试。
+                    lastContainer[thislevel] = uis[i];
+                }
+            }
+            //处理最后一项非0层级情况
+            if (lastlevel > 0)
+            {
+                for (int j = lastlevel; j > 0; j--)
+                    lastContainer[j - 1].Relayout();
+            }
+            RearrangeAControl((Control)container); container.ResumeLayout();
+            lastContainer = null;
+            return container;
+        }
+        public virtual void RearrangeAControl(Control container)
+        {
+            int y = 0;
+            int maxWidth = 400;
+
+            foreach (Control ctr in container.Controls)
+            {
+                //if (ctr.Controls.Count>0)
+                //{
+                //    RearrangeAControl(ctr);
+                //}
+                if (ctr.Visible)
+                {
+                    ctr.Top = y;
+                    //y += ctr.Height + 2;
+                    y = ctr.Bottom + ControlsGap;
+                    container.Height = y;
+                    if (ctr.Right > maxWidth) maxWidth = ctr.Right;
+                }
+            }
+            container.Width = maxWidth;
+        }
+        #endregion
+
+    }
 }

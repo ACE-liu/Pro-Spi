@@ -66,7 +66,7 @@ namespace SPI.SPIUi
         /// <param name="pr">显示在参数前面的文本</param>
         /// <param name="po">显示在参数后面的文本</param>
         /// <param name="ck">是否需要显示测试结果</param>
-        public UIConfig(CheckWinBase win, int lvl, string pr, string po,double upValue)
+        public UIConfig(CheckWinBase win, int lvl, string pr, string po,double upValue=-1)
             : base(win, lvl)
         {
             target = 0;

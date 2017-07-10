@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SPI.Global.Configuration;
 using SPI.SPICheckWin;
+using System.Drawing;
 
 namespace SPI.SPIUi
 {
@@ -20,8 +21,21 @@ namespace SPI.SPIUi
         {
             this.text = text;
             Visible = isVisible;
+            _check = false;
         }
-
+        bool _check;
+        public bool Check
+        {
+            get { return _check; }
+            set
+            {
+                if (follows != null)
+                {
+                    follows.Visible = value;
+                }
+                _check = value;
+            }
+        }
         public override Control CreateUI()
         {
             cb = new CheckBox();
@@ -30,6 +44,7 @@ namespace SPI.SPIUi
             cb.Left = ControlsGap;
             cb.Text = text;
             cb.AutoSize = true;
+            cb.Checked = _check;
             cb.CheckedChanged += Cb_CheckedChanged;
             cb.ResumeLayout();
             return cb;
@@ -37,26 +52,31 @@ namespace SPI.SPIUi
 
         private void Cb_CheckedChanged(object sender, EventArgs e)
         {
-            if (follows!=null&&!HideFollows)
+            cb.ForeColor = cb.Checked ? Color.Black : Color.Gray;
+            Check = cb.Checked;
+            if (follows!=null&&HideFollows)
             {
-                if (cb.Checked)
-                {
-                    holder.RearrangeAllControl(follows, level + 1);
-                }
-                else
-                {
-                    follows.SuspendLayout();
-                    Relayout();
-                    //follows.ResumeLayout();
-                }
+                //if (cb.Checked)
+                //{
+                //    //holder.RearrangeAllControl(follows, level + 1);
+                //}
+                //else
+                //{
+                //    follows.SuspendLayout();
+                //    Relayout();
+                //    //follows.ResumeLayout();
+                //}
+                holder.RearrangeAllControl(follows, level + 1);
             }
         }
         public override Panel AddFollows()
         {
             follows = new Panel();
-            follows.BorderStyle = BorderStyle.Fixed3D;
+            //follows.AutoSize = true;
+            follows.BorderStyle = BorderStyle.FixedSingle;
             follows.Left = cb.Left;
             follows.Top = cb.Bottom + ControlsGap;
+            follows.Visible = _check;
             follows.VisibleChanged += Follows_VisibleChanged;
             return follows;
         }
@@ -68,6 +88,7 @@ namespace SPI.SPIUi
             }
             else
                 follows.Controls.Add(ctr);
+            ResizeFollowSize(follows);
         }
         private void Follows_VisibleChanged(object sender, EventArgs e)
         {

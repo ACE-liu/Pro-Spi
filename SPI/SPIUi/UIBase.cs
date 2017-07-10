@@ -119,6 +119,11 @@ namespace SPI.SPIUi
         public virtual void Relayout()
         {
         }
+
+        public void ResizeFollowSize(Control ctr)
+        {
+            ctr.Width = CurFocusPanel.Width-ControlsGap*2;
+        }
         /// <summary>
         /// 添加控件到下层控件容器
         /// </summary>
@@ -145,7 +150,8 @@ namespace SPI.SPIUi
         /// <returns></returns>
         internal bool NeedShow()
         {
-            return DefaultDataVersion <= LastVersion&&DefaultDataVersion>=FirstVersion;
+            return true;
+            //return DefaultDataVersion <= LastVersion&&DefaultDataVersion>=FirstVersion;
         }
         /// <summary>
         /// 是否需要保存本UI内容到文件

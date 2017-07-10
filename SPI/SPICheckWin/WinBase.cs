@@ -9,6 +9,7 @@ using System.ComponentModel;
 using SPI.Global;
 
 using static SPI.Global.Configuration;
+using System.Windows.Forms;
 
 namespace SPI.SPICheckWin
 {
@@ -87,17 +88,75 @@ namespace SPI.SPICheckWin
             return d1 > d2;
         }
         public void OnLoseFocus()
-        { }
+        {
+
+        }
         /// <summary>
         /// 获取到焦点处理
         /// </summary>
         public void OnFocus()
         {
+            if (this is CheckWinBase)
+            {
+                ShowProperty = false;
+            }
+            else
+                ShowProperty = true;
             GetFocus();
         }
         public virtual void GetFocus()
         {
-
+            if (CurFocusPanel == null)
+            {
+                return;
+            }
+            CurFocusPanel.SuspendLayout();
+            while (CurFocusPanel.Controls.Count > 0)
+            {
+                if (null != CurFocusPanel.Controls[0])
+                {
+                    CollectManualCreateComponentMemory(CurFocusPanel.Controls[0]);
+                }
+            }
+            CurFocusPanel.Controls.Clear();
+            CurFocusPanel.AutoScrollPosition = new Point(0, 0);
+            CurFocusPanel.ResumeLayout();
+        }
+        /// <summary>
+        /// 递归释放子父控件资源
+        /// </summary>
+        /// <param name="ctr"></param>
+        public void CollectManualCreateComponentMemory(Control ctr)
+        {
+            if (null == ctr)
+            {
+                return;
+            }
+            if (0 == ctr.Controls.Count)
+            {
+                ctr.Dispose();
+                ctr = null;
+                return;
+            }
+            if (null != ctr as PropertyGrid)
+            {
+                while ((ctr as PropertyGrid).Controls.Count > 0)
+                {
+                    //this.CollectManualCreateComponentMemory((ctr as PropertyGrid).Controls[0]);
+                    (ctr as PropertyGrid).SelectedObject = null;
+                    //(ctr as PropertyGrid).PropertyValueChanged -= new PropertyValueChangedEventHandler(Globles.theForm.propertyGrid1_PropertyValueChanged);
+                    (ctr as PropertyGrid).Dispose();
+                }
+            }
+            else
+            {
+                while (ctr.Controls.Count > 0)
+                {
+                    this.CollectManualCreateComponentMemory(ctr.Controls[0]);
+                }
+                ctr.Dispose();
+                ctr = null;
+            }
         }
         /// <summary>
         /// 检查窗的任何数据改变事件处理。
