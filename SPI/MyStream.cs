@@ -10,21 +10,21 @@ namespace SPI
     /// <summary>
     /// SPI 文件相关类，具体是否按照2D，待design；
     /// </summary>
-    class MyWriter:StreamWriter
+    public class MyWriter:StreamWriter
     {
         public int DataVersion;
         public string FileName;
-        internal MyWriter(string path):base(path)
+        public MyWriter(string path):base(path)
         {
             FileName = path;
         }
     }
 
-    class MyReader:StreamReader
+    public class MyReader:StreamReader
     {
         public int DataVersion;
         public string FileName;
-        internal MyReader(string path):base(path)
+        public MyReader(string path):base(path)
         {
             FileName = path;
         }

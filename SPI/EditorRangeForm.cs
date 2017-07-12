@@ -33,6 +33,7 @@ namespace SPI
         protected Brush ngBrush = Brushes.Red;
         protected List<SlideBlock> blockList = null;
         protected SlideBlock curSlideBlock = null;
+        protected SlideBlock lastSlideBlock = null;
         protected SlideBlock left;
         protected SlideBlock right;
         public EditorRangeForm()
@@ -67,7 +68,7 @@ namespace SPI
         }
         protected void UpdateChange()
         {
-            if (DataChanged!=null)
+            if (DataChanged != null)
             {
                 DataChanged(this, new EventArgs());
             }
@@ -113,9 +114,8 @@ namespace SPI
         protected void initControls()
         {
             lbUnit.Text = Unit;
-            lbUnit1.Text = Unit;
+            lbMin.Text = min+Unit;
             tbMax.Text = max.ToString();
-            tbMin.Text = min.ToString();
 
         }
         /// <summary>
@@ -159,15 +159,37 @@ namespace SPI
         private double mouseDownCalculateLoc;
         private void pbColor_MouseDown(object sender, MouseEventArgs e)
         {
-            mouseDownCalculateLoc = e.Location.X;
+            if (e.Button == MouseButtons.Left)
+            {
+                double xPos = e.Location.X;
+                List<SlideBlock> sbList = blockList?.FindAll((p) => p.IsMouseOn(xPos));
+                if (sbList.Count == 1)
+                {
+                    curSlideBlock = sbList.First();
+                }
+                else if (sbList.Count>=2)
+                {
+                    if (sbList.FindAll(p => p.Value == min).Count > 0)
+                    {
+                        curSlideBlock = sbList.Last();
+                    }
+                    else if (sbList.FindAll(p => p.Value == max).Count > 0)
+                    {
+                        curSlideBlock = sbList.First();
+                    }
+                    else
+                        curSlideBlock = sbList.First();
+                }
+                mouseDownCalculateLoc = e.Location.X;
+            }
         }
 
         private void pbColor_MouseMove(object sender, MouseEventArgs e)
         {
             bool dataChanged = false;
             double xPos = e.Location.X;
-            SlideBlock sb = blockList?.Find((p) => p.IsMouseOn(xPos));
-            if (sb != null || curSlideBlock != null)
+            List<SlideBlock> sbList = blockList?.FindAll((p) => p.IsMouseOn(xPos));
+            if (sbList.Count > 0 || curSlideBlock != null)
             {
                 pbColor.Cursor = Cursors.SizeWE;
             }
@@ -175,35 +197,43 @@ namespace SPI
             {
                 pbColor.Cursor = Cursors.Default;
             }
-            if (e.Button == MouseButtons.Left)//鼠标左键按下
+            if (curSlideBlock != null)
             {
-                if (curSlideBlock == null)
-                {
-                    curSlideBlock = sb;
-                }
-                else
-                {
-                    curSlideBlock.Add(e.Location.X - mouseDownCalculateLoc);
-                    mouseDownCalculateLoc = e.Location.X;
-                    dataChanged = true;
-                }
+                curSlideBlock.Add(e.Location.X - mouseDownCalculateLoc);
+                mouseDownCalculateLoc = e.Location.X;
+                dataChanged = true;
             }
             if (dataChanged)
             {
-                RefreshControls();
+                //RefreshControls();
                 Refresh();
                 UpdateChange();
             }
-
         }
 
         private void pbColor_Paint(object sender, PaintEventArgs e)
         {
             RefreshRect(e.Graphics);
         }
+        private void btMax_Click(object sender, EventArgs e)
+        {
+            lastSlideBlock?.AddOrSubtract(true);
+            //RefreshControls();
+            Refresh();
+            UpdateChange();
+        }
+
+        private void btMin_Click(object sender, EventArgs e)
+        {
+            lastSlideBlock?.AddOrSubtract(false);
+            //RefreshControls();
+            Refresh();
+            UpdateChange();
+        }
 
         private void pbColor_MouseUp(object sender, MouseEventArgs e)
         {
+            lastSlideBlock = curSlideBlock;
             curSlideBlock = null;
         }
     }
@@ -249,6 +279,17 @@ namespace SPI
             }
         }
 
+        public void AddOrSubtract(bool ifAdd)
+        {
+            if (ifAdd)
+            {
+                value++;
+            }
+            else
+                value--;
+            OnValueChange();
+            RefreshX();
+        }
         public void Add(double addValue)
         {
             this.value += addValue / ParentWidth * (maxLevel + minLevel);

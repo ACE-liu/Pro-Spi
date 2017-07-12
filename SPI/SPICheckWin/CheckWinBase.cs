@@ -66,7 +66,12 @@ namespace SPI.SPICheckWin
         {
             uis?.Remove(ui);
         }
-
+        /// <summary>
+        /// 颜色设置控件尺寸调整后调用此函数
+        /// </summary>
+        public void OnSizeChange()
+        {
+        }
         public override void GetFocus()
         {
             if (ShowProperty || this.uis?.Count == 0)

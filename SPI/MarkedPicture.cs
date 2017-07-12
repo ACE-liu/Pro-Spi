@@ -85,6 +85,8 @@ namespace SPI
         /// 用于计算拖动时的辅助量，保存鼠标按下时界面的状态值
         /// </summary>
         public Point MouseDownDelt = Point.Empty;
+
+        internal static WinBase MouseOnWin = null;
         /// <summary>
         /// 当前背景图是否可用，
         /// </summary>
@@ -299,10 +301,6 @@ namespace SPI
             MouseLeftDown = false;
             Refresh();
         }
-        public void OnDataChanged()
-        {
-            Refresh();
-        }
         /// <summary>
         /// 根据点相对方框的方位设置控件中显示的鼠标形状.
         /// </summary>
@@ -353,15 +351,15 @@ namespace SPI
                 else
                     CurFocus?.ChangeRect(e.Location);
                 SetCursor(de);
-                Refresh();
+                //Refresh();
             }
             else if(e.Button == MouseButtons.Right)
             { }
             else
             {
-                WinBase mouseFocus = TheBoard?.FindMouseOnRect(de);
+                MouseOnWin = TheBoard?.FindMouseOnRect(de);
 
-                if ((mouseFocus == CurFocus) && (CurFocus != TheBoard))
+                if ((MouseOnWin == CurFocus) && (CurFocus != TheBoard))
                 {
                     //鼠标移动到当前焦点的范围内时，根据相对位置设置鼠标形状指示将改变哪个边。
                     SetCursor(de);
@@ -372,6 +370,7 @@ namespace SPI
                     Cursor = Cursors.Default;
                 }
             }
+            Refresh();
         }
     }
 }

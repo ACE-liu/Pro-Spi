@@ -24,12 +24,6 @@ namespace SPI
             theMarkPicture = markedPicture1;
             CurFocusPanel = splitContainer3.Panel1;
         }
-
-        //private void addEditor()
-        //{
-        //    DoubleEditorRangeForm er = new DoubleEditorRangeForm("um",0,100,20,40,50,60,true);
-        //    splitContainer3.Panel1.Controls.Add(er);
-        //}
         private static bool isFirstLoad = false;
         public static SPIProgramForm GetInstance()
         {
@@ -108,7 +102,7 @@ namespace SPI
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            AddComponent(new Chip(new CircleMode()));
+            AddComponent(new MarkPoint(new CircleMode()));
         }
 
     }

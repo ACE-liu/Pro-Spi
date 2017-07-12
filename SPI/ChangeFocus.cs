@@ -29,70 +29,22 @@ namespace SPI
             return singletonForm;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+
+        private void btMove_Click(object sender, EventArgs e)
+        {
+            CurFocus.CanMove = true;
+            Hide();
+        }
+
+        private void btResize_Click(object sender, EventArgs e)
+        {
+            CurFocus.CanResize = true;
+            Hide();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
             singletonForm?.Hide();
-        }
-
-        private void btHor_Click(object sender, EventArgs e)
-        {
-            int value = decimal.ToInt32(nbMovehorizon.Value);
-            if (value != 0)
-            {
-                CurFocus?.Move(value, 0);
-                dataChanged = true;
-            }
-            this.Close();
-        }
-
-        private void btve_Click(object sender, EventArgs e)
-        {
-            int value = decimal.ToInt32(nbVertical.Value);
-            if (value != 0)
-            {
-                CurFocus?.Move(0, value);
-                dataChanged = true;
-            }
-            Close();
-        }
-
-        private void ChangeFocus_Load(object sender, EventArgs e)
-        {
-            initialize();
-        }
-        private void initialize()
-        {
-            dataChanged = false;
-        }
-
-        private void btSize_Click(object sender, EventArgs e)
-        {
-            int value = decimal.ToInt32(nbSizeUp.Value);
-            if (value != 0)
-            {
-                dataChanged = true;
-                CurFocus?.ResizeAroundCenter(value, 0);
-            }
-            Close();
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            int value = decimal.ToInt32(nbSizeDown.Value);
-            if (value != 0)
-            {
-                dataChanged = true;
-                CurFocus?.ResizeAroundCenter(0, value);
-            }
-            Close();
-        }
-
-        private void ChangeFocus_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (dataChanged)
-            {
-                theMarkPicture.OnDataChanged();
-            }
         }
     }
 }

@@ -92,8 +92,8 @@ namespace SPI.SPIUi
         {
             this.minValue = slideControl.Min;
             this.maxValue = slideControl.Max;
-            this.leftValue = slideControl.Left;
-            this.rightValue = slideControl.Right;
+            this.leftValue = slideControl.LeftValue;
+            this.rightValue = slideControl.RightValue;
         }
     }
 }

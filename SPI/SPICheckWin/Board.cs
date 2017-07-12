@@ -39,6 +39,8 @@ namespace SPI.SPICheckWin
         private void initialize()
         {
             id = 0;
+            CanMove = true;
+            CanResize = false;
             WinName = "PCB";
             this.wType = WinType.Board;
             SubWinList = new List<WinBase>();

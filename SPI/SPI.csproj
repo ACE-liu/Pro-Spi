@@ -116,13 +116,26 @@
     <Compile Include="EditorRangeForm.Designer.cs">
       <DependentUpon>EditorRangeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageProcess.cs" />
     <Compile Include="MarkedPicture.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="MarkedPicture.Designer.cs">
       <DependentUpon>MarkedPicture.cs</DependentUpon>
     </Compile>
+    <Compile Include="MultiColors.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MultiColors.designer.cs">
+      <DependentUpon>MultiColors.cs</DependentUpon>
+    </Compile>
     <Compile Include="MyStream.cs" />
+    <Compile Include="RangeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RangeEditor.designer.cs">
+      <DependentUpon>RangeEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="SPICheckWin\Board.cs" />
     <Compile Include="Global\Configuration.cs" />
     <Compile Include="Global\SpiBase.cs" />
@@ -157,9 +170,11 @@
     <Compile Include="SPIUi\UIBase.cs" />
     <Compile Include="SPIUi\UIButton.cs" />
     <Compile Include="SPIUi\UICheckBox.cs" />
+    <Compile Include="SPIUi\UIColor.cs" />
     <Compile Include="SPIUi\UIConfig.cs" />
     <Compile Include="SPIUi\UIDoubleRadio.cs" />
     <Compile Include="SPIUi\UIDoubleSlide.cs" />
+    <Compile Include="SPIUi\UIInt.cs" />
     <Compile Include="SPIUi\UIRadio.cs" />
     <Compile Include="SPIUi\UISlide.cs" />
     <EmbeddedResource Include="ChangeFocus.resx">
@@ -174,6 +189,12 @@
     <EmbeddedResource Include="MarkedPicture.resx">
       <DependentUpon>MarkedPicture.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MultiColors.en-US.resx">
+      <DependentUpon>MultiColors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiColors.resx">
+      <DependentUpon>MultiColors.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -184,6 +205,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RangeEditor.resx">
+      <DependentUpon>RangeEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SPIProgramForm.resx">
       <DependentUpon>SPIProgramForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -205,6 +229,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\red.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

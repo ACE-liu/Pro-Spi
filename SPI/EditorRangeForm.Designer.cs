@@ -33,8 +33,7 @@
             this.btMin = new System.Windows.Forms.Button();
             this.lbUnit = new System.Windows.Forms.Label();
             this.tbMax = new System.Windows.Forms.TextBox();
-            this.tbMin = new System.Windows.Forms.TextBox();
-            this.lbUnit1 = new System.Windows.Forms.Label();
+            this.lbMin = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -62,8 +61,9 @@
             this.btMax.Name = "btMax";
             this.btMax.Size = new System.Drawing.Size(43, 34);
             this.btMax.TabIndex = 1;
-            this.btMax.Text = "左";
+            this.btMax.Text = "右";
             this.btMax.UseVisualStyleBackColor = true;
+            this.btMax.Click += new System.EventHandler(this.btMax_Click);
             // 
             // btMin
             // 
@@ -74,6 +74,7 @@
             this.btMin.TabIndex = 2;
             this.btMin.Text = "左";
             this.btMin.UseVisualStyleBackColor = true;
+            this.btMin.Click += new System.EventHandler(this.btMin_Click);
             // 
             // lbUnit
             // 
@@ -96,23 +97,15 @@
             this.tbMax.TabIndex = 4;
             this.tbMax.TextChanged += new System.EventHandler(this.tbMax_TextChanged);
             // 
-            // tbMin
+            // lbMin
             // 
-            this.tbMin.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbMin.Location = new System.Drawing.Point(0, 0);
-            this.tbMin.Name = "tbMin";
-            this.tbMin.Size = new System.Drawing.Size(40, 23);
-            this.tbMin.TabIndex = 6;
-            // 
-            // lbUnit1
-            // 
-            this.lbUnit1.AutoSize = true;
-            this.lbUnit1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lbUnit1.Location = new System.Drawing.Point(49, 7);
-            this.lbUnit1.Name = "lbUnit1";
-            this.lbUnit1.Size = new System.Drawing.Size(19, 17);
-            this.lbUnit1.TabIndex = 5;
-            this.lbUnit1.Text = "%";
+            this.lbMin.AutoSize = true;
+            this.lbMin.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbMin.Location = new System.Drawing.Point(14, 4);
+            this.lbMin.Name = "lbMin";
+            this.lbMin.Size = new System.Drawing.Size(19, 17);
+            this.lbMin.TabIndex = 5;
+            this.lbMin.Text = "%";
             // 
             // label1
             // 
@@ -153,8 +146,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.tbMin);
-            this.Controls.Add(this.lbUnit1);
+            this.Controls.Add(this.lbMin);
             this.Controls.Add(this.tbMax);
             this.Controls.Add(this.lbUnit);
             this.Controls.Add(this.btMin);
@@ -176,8 +168,7 @@
         private System.Windows.Forms.Button btMin;
         private System.Windows.Forms.Label lbUnit;
         private System.Windows.Forms.TextBox tbMax;
-        private System.Windows.Forms.TextBox tbMin;
-        private System.Windows.Forms.Label lbUnit1;
+        private System.Windows.Forms.Label lbMin;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

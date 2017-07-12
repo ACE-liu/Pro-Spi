@@ -50,6 +50,10 @@ namespace SPI.SPICheckWin
         protected WinType wType = WinType.None;
         public ShapeBase ShowShape { get; protected set; } = null;
         public abstract void Show(Graphics g);
+
+        //标记当前窗是否可以移动或者可以尺寸变化
+        public bool CanMove = false;
+        public bool CanResize = false;
         internal WinBase Parent = null;
         /// <summary>
         /// 计算鼠标相对本检查框处于哪个位置。
@@ -66,13 +70,13 @@ namespace SPI.SPICheckWin
         {
             ShowShape.Move(p);
         }
-        public void Move(int x,int y)
+        public void Move(int x, int y)
         {
             Move(new Point(x, y));
         }
-        public void ResizeAroundCenter(int width,int height)
+        public void ResizeAroundCenter(int width, int height)
         {
-            ShowShape.ResizeAroundCenter(width,height);
+            ShowShape.ResizeAroundCenter(width, height);
             MoveToRange(Parent);
         }
         /// <summary>
@@ -89,7 +93,11 @@ namespace SPI.SPICheckWin
         }
         public void OnLoseFocus()
         {
-
+            if (!(this is Board))
+            {
+                CanResize = false;
+                CanMove = false;
+            }
         }
         /// <summary>
         /// 获取到焦点处理
@@ -103,6 +111,9 @@ namespace SPI.SPICheckWin
             else
                 ShowProperty = true;
             GetFocus();
+        }
+        public virtual void ChangeColorRange(MultiColors mc)
+        {
         }
         public virtual void GetFocus()
         {
@@ -197,13 +208,13 @@ namespace SPI.SPICheckWin
         /// <param name="edge">当前正在修改的边</param>
         private void ExpandToIncludeSubs(Direction edge)
         {
-            if (SubWinList==null)
+            if (SubWinList == null)
             {
                 return;
             }
             foreach (WinBase win in SubWinList)
             {
-                ShowShape.ExpandToInclude(win.ShowShape,edge);
+                ShowShape.ExpandToInclude(win.ShowShape, edge);
             }
         }
         /// <summary>
@@ -216,35 +227,57 @@ namespace SPI.SPICheckWin
             switch (MarkedPicture.ChangingEdge)
             {
                 case Direction.top:
-                    if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    if (CanResize)
+                    {
+                        if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    }
                     break;
                 case Direction.bottom:
-                    ShowShape.Height = orge.Y - ShowShape.Y;
+                    if (CanResize)
+                        ShowShape.Height = orge.Y - ShowShape.Y;
                     break;
                 case Direction.left:
-                    if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                    if (CanResize)
+                    {
+                        if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                    }
                     break;
                 case Direction.right:
-                    ShowShape.Width = orge.X - ShowShape.X;
+                    if (CanResize)
+                        ShowShape.Width = orge.X - ShowShape.X;
                     break;
                 case Direction.topLeft:
-                    if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
-                    if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    if (CanResize)
+                    {
+                        if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                        if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                    }
                     break;
                 case Direction.bottomRight:
-                    ShowShape.Height = orge.Y - ShowShape.Y;
-                    ShowShape.Width = orge.X - ShowShape.X;
+                    if (CanResize)
+                    {
+                        ShowShape.Height = orge.Y - ShowShape.Y;
+                        ShowShape.Width = orge.X - ShowShape.X;
+                    }
                     break;
                 case Direction.topRight:
-                    if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
-                    ShowShape.Width = orge.X - ShowShape.X;
+                    if (CanResize)
+                    {
+                        if (ShowShape.Height - orge.Y + ShowShape.Y > min) { ShowShape.Height = ShowShape.Height - orge.Y + ShowShape.Y; ShowShape.Y = orge.Y; } else { ShowShape.Y = ShowShape.Height + ShowShape.Y - min; ShowShape.Height = min; }
+                        ShowShape.Width = orge.X - ShowShape.X;
+                    }
                     break;
                 case Direction.bottomLeft:
-                    if (ShowShape.Width - orge.X + ShowShape.X > min) { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; } else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
-                    ShowShape.Height = orge.Y - ShowShape.Y;
+                    if (CanResize)
+                    {
+                        if (ShowShape.Width - orge.X + ShowShape.X > min)
+                        { ShowShape.Width = ShowShape.Width - orge.X + ShowShape.X; ShowShape.X = orge.X; }
+                        else { ShowShape.X = ShowShape.X + ShowShape.Width - min; ShowShape.Width = min; }
+                        ShowShape.Height = orge.Y - ShowShape.Y;
+                    }
                     break;
                 case Direction.center:
-                    if (this.wType!= WinType.Board)
+                    if ((this.wType != WinType.Board) && CanMove)
                     {
                         Point oldpos = ShowShape.Location;
 #pragma warning disable CS1690 // 访问引用封送类的字段上的成员可能导致运行时异常
@@ -269,7 +302,7 @@ namespace SPI.SPICheckWin
         }
         protected void MoveSub(Point shift)
         {
-            if (SubWinList==null)
+            if (SubWinList == null)
             {
                 return;
             }
@@ -297,7 +330,7 @@ namespace SPI.SPICheckWin
                         break;
                     case Direction.center:
                         //如果没有边，反馈先找到的中心框。
-                        if (centerRect == null)
+                        if (centerRect == null || rct == CurFocus)
                             centerRect = rct;
                         break;
                     default:
