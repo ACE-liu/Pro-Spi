@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using SPI.Global;
 using SPI.SPICheckWin;
 using static SPI.Global.Configuration;
 
@@ -75,7 +75,46 @@ namespace SPI.SPIUi
             return ui;
 
         }
-
+        /// <summary>
+        /// 根据测试值获取测试的结果
+        /// </summary>
+        /// <param name="testValue"></param>
+        /// <returns></returns>
+        public TestStatus GetTestStatusByValue(double testValue)
+        {
+            TestStatus rtn = TestStatus.OK;
+            if (testValue > maxValue || testValue < minValue)
+            {
+                throw new ArgumentOutOfRangeException("testValue");
+            }
+            if (isLargeValueOk)
+            {
+                if (testValue > rightValue1||testValue<leftValue)
+                {
+                    rtn = TestStatus.OK;
+                }
+                else if ((testValue >= leftValue && testValue <= rightValue)||(testValue>=leftValue1&&testValue<=rightValue1))
+                {
+                    rtn = TestStatus.WARN;
+                }
+                else
+                    rtn = TestStatus.NG;
+            }
+            else
+            {
+                if (testValue > rightValue1 || testValue < leftValue)
+                {
+                    rtn = TestStatus.NG;
+                }
+                else if ((testValue >= leftValue && testValue <= rightValue) || (testValue >= leftValue1 && testValue <= rightValue1))
+                {
+                    rtn = TestStatus.WARN;
+                }
+                else
+                    rtn = TestStatus.OK;
+            }
+            return rtn;
+        }
         private void SlideControl_DataChanged(object sender, EventArgs e)
         {
             this.minValue = slideControl.Min;

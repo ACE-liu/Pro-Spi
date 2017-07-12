@@ -70,7 +70,15 @@ namespace SPI.Global
         平均高度偏出,
         连锡
     }
-
+    /// <summary>
+    /// 测试的三种结果
+    /// </summary>
+    public enum TestStatus
+    {
+        OK,
+        WARN,
+        NG,
+    }
     /// <summary>
     /// 元件类别方便界面显示
     /// </summary>
