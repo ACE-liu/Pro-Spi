@@ -104,6 +104,12 @@
     <Compile Include="ChangeFocus.Designer.cs">
       <DependentUpon>ChangeFocus.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataGridDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataGridDlg.designer.cs">
+      <DependentUpon>DataGridDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="DoubleEditorRangeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -117,6 +123,7 @@
       <DependentUpon>EditorRangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageProcess.cs" />
+    <Compile Include="InternationalLanguage.cs" />
     <Compile Include="MarkedPicture.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -180,6 +187,12 @@
     <EmbeddedResource Include="ChangeFocus.resx">
       <DependentUpon>ChangeFocus.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DataGridDlg.en-US.resx">
+      <DependentUpon>DataGridDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataGridDlg.resx">
+      <DependentUpon>DataGridDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditorRangeForm.resx">
       <DependentUpon>EditorRangeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -228,7 +241,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\cursor.png" />
   </ItemGroup>

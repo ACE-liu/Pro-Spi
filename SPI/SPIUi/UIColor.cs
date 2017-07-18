@@ -114,13 +114,13 @@ namespace SPI.SPIUi
         /// 保存数据到文件
         /// </summary>
         /// <param name="sw">指示要写入的文件的自定义流类对象</param>
-        public override void SaveTo(MyWriter sw)
+        public override void Save(MyWriter mw)
         {
-            //sw.Save(_colors.Count);
-            //foreach (ColorRange cr in _colors)
-            //{
-            //    cr.SaveTo(sw);
-            //}
+            mw.Save(_colors.Count);
+            foreach (ColorRange cr in _colors)
+            {
+                cr.SaveTo(mw);
+            }
         }
         /// <summary>
         /// 从文件读入数据
@@ -128,17 +128,13 @@ namespace SPI.SPIUi
         /// <param name="sr">指示要从中读入数据的自定义流类对象</param>
         public override void LoadFrom(MyReader sr)
         {
-            //int crc = 0;
-            //sr.Load(ref crc);//= int.Parse(sr.ReadLine());
-            //for (int i = 0; i < crc; i++)
-            //{
-            //    ColorRange cr = new ColorRange();
-            //    cr.LoadFrom(sr);
-            //    if (i == 0)
-            //        this._colors[0] = cr;
-            //    else
-            //        this._colors.Add(cr);
-            //}
+            int crc = sr.LoadInt();        
+            for (int i = 0; i < crc; i++)
+            {
+                ColorRange cr = new ColorRange();
+                cr.LoadFrom(sr);
+                this._colors.Add(cr);
+            }
         }
         /// <summary>
         /// 从其他模板拷贝数据

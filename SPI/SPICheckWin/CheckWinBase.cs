@@ -83,6 +83,44 @@ namespace SPI.SPICheckWin
                 SetCheckWindowFocus();
             }
         }
+        public virtual void Save(MyWriter mw)
+        {
+            mw.Save(ShowShape is RectangleMode);
+            mw.Save(ShowShape.X);
+            mw.Save(ShowShape.Y);
+            mw.Save(ShowShape.Width);
+            mw.Save(ShowShape.Height);
+            mw.Save(ShowShape.Angle);
+            mw.SaveLineEnd();
+            foreach (var item in uis)
+            {
+                item.Save(mw);
+            }
+            mw.SaveLineEnd();
+        }
+        public virtual void LoadFrom(MyReader mr)
+        {
+            bool isRect = mr.LoadBool();
+            if (isRect&&ShowShape is CircleMode)
+            {
+                ShowShape = new RectangleMode();
+            }
+            else if (!isRect&&ShowShape is RectangleMode)
+            {
+                ShowShape = new CircleMode();
+            }
+            ShowShape.X = mr.LoadInt();
+            ShowShape.Y = mr.LoadInt();
+            ShowShape.Width = mr.LoadInt();
+            ShowShape.Height = mr.LoadInt();
+            ShowShape.Angle = mr.LoadDouble();
+            mr.LoadLineEnd();
+            foreach (var item in uis)
+            {
+                item.LoadFrom(mr);
+            }
+            mr.LoadLineEnd();
+        }
         /// <summary>
         /// 检查窗的任何数据改变事件处理。
         /// </summary>

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace SPI.Global
 {
     /* 用于存放常用的静态函数静态字段*/
-    internal static class Configuration
+    public static class Configuration
     {
         #region***********Field***********
 
@@ -66,6 +66,11 @@ namespace SPI.Global
         internal static MarkedPicture theMarkPicture = null;
         internal static System.Windows.Forms.Panel CurFocusPanel = null;
 
+        #region ***程序路径相关配置**
+        public static string ProgramRootPath;
+        public static string ProgramPath;
+        public static string ImagePath;
+        #endregion
 
         /// <summary>
         /// 显示在markedPicture中的图像在主板中的位置。
@@ -75,7 +80,14 @@ namespace SPI.Global
         #endregion
 
         #region***********Method***********
-
+        public static string ToDirPath(string path)
+        {
+            if (path.EndsWith("\\")||path.EndsWith("/"))
+            {
+                return path;
+            }
+            return path + "\\";
+        }
         /// <summary>
         /// 全局初始化
         /// </summary>

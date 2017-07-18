@@ -80,6 +80,14 @@ namespace SPI.SPIUi
             follows.VisibleChanged += Follows_VisibleChanged;
             return follows;
         }
+        public override void LoadFrom(MyReader mr)
+        {
+            Check = mr.LoadBool();
+        }
+        public override void Save(MyWriter mw)
+        {
+            mw.Save(_check);
+        }
         public override void Add(Control ctr)
         {
             if (follows == null)

@@ -18,7 +18,7 @@ namespace SPI.SPIUi
         public string text;
         private bool isLargeValueOk;
         private string backUnit;//单位% um
-        
+
 
         private double minValue;
         private double leftValue;
@@ -26,7 +26,7 @@ namespace SPI.SPIUi
         private double leftValue1;
         private double rightValue1;
         private double maxValue;
-        public UIDoubleSlide(CheckWinBase win ,string backUnit, int lvl, string text, double min, double max, bool isLargeValueOk):base(win,lvl)
+        public UIDoubleSlide(CheckWinBase win, string backUnit, int lvl, string text, double min, double max, bool isLargeValueOk) : base(win, lvl)
         {
             this.backUnit = backUnit;
             this.text = text;
@@ -62,7 +62,7 @@ namespace SPI.SPIUi
                 testItem.AutoSize = true;
                 ui.Controls.Add(testItem);
             }
-            slideControl = new DoubleEditorRangeForm(backUnit, minValue, maxValue, leftValue, rightValue,leftValue1,rightValue1, isLargeValueOk);
+            slideControl = new DoubleEditorRangeForm(backUnit, minValue, maxValue, leftValue, rightValue, leftValue1, rightValue1, isLargeValueOk);
             slideControl.DataChanged += SlideControl_DataChanged;
             if (testItem != null)
             {
@@ -89,11 +89,11 @@ namespace SPI.SPIUi
             }
             if (isLargeValueOk)
             {
-                if (testValue > rightValue1||testValue<leftValue)
+                if (testValue > rightValue1 || testValue < leftValue)
                 {
                     rtn = TestStatus.OK;
                 }
-                else if ((testValue >= leftValue && testValue <= rightValue)||(testValue>=leftValue1&&testValue<=rightValue1))
+                else if ((testValue >= leftValue && testValue <= rightValue) || (testValue >= leftValue1 && testValue <= rightValue1))
                 {
                     rtn = TestStatus.WARN;
                 }
@@ -114,6 +114,24 @@ namespace SPI.SPIUi
                     rtn = TestStatus.OK;
             }
             return rtn;
+        }
+        public override void Save(MyWriter mw)
+        {
+            mw.Save(minValue);
+            mw.Save(leftValue);
+            mw.Save(rightValue);
+            mw.Save(leftValue1);
+            mw.Save(rightValue1);
+            mw.Save(maxValue);
+        }
+        public override void LoadFrom(MyReader mr)
+        {
+            minValue = mr.LoadDouble();
+            leftValue = mr.LoadDouble();
+            rightValue = mr.LoadDouble();
+            leftValue1 = mr.LoadDouble();
+            rightValue1 = mr.LoadDouble();
+            maxValue = mr.LoadDouble();
         }
         private void SlideControl_DataChanged(object sender, EventArgs e)
         {

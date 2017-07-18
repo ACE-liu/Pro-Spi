@@ -10,7 +10,7 @@ using static SPI.Global.Configuration;
 
 namespace SPI.SPIUi
 {
-    class UIButton:UIBase
+    class UIButton : UIBase
     {
         ///是否显示该控件
         public bool isVisible = true;
@@ -72,7 +72,14 @@ namespace SPI.SPIUi
                 this.ui = null;
             }
         }
-
+        public override void Save(MyWriter mw)
+        {
+            mw.Save(_check);
+        }
+        public override void LoadFrom(MyReader mw)
+        {
+            Check = mw.LoadBool();
+        }
         /// <summary>
         /// 创建显示控件。由于大部分UI设置的参数不需要显示，设计为只为需要显示的UI类对象创建界面控件。
         /// </summary>
@@ -170,23 +177,6 @@ namespace SPI.SPIUi
         {
             DataChanged = true;//标记数据已经改动可能需要保存
             holder.OnDataChange(sender, e);
-        }
-        /// <summary>
-        /// 保存数据到文件
-        /// </summary>
-        /// <param name="sw">指示要写入的文件的自定义流类对象</param>
-        public override void SaveTo(MyWriter sw)
-        {
-           // sw.Save(strButtonName);
-        }
-        /// <summary>
-        /// 从文件读入数据
-        /// </summary>
-        /// <param name="sr">指示要从中读入数据的自定义流类对象</param>
-        public override void LoadFrom(MyReader sr)
-        {
-           // sr.Load(ref strButtonName);//= int.Parse(sr.ReadLine());
-
         }
         /// <summary>
         /// 从其他模板拷贝数据

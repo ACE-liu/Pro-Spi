@@ -88,11 +88,24 @@ namespace SPI
         /// </summary>
         private void buildNewProgram()
         {
+            DataGridDlg dlg = new DataGridDlg();
+            NewBoardDlgData data = new NewBoardDlgData();
+            dlg.SelectedObject = data;
+            if (dlg.ShowDialog()==DialogResult.OK)
+            {
+                data.SetBoardData(TheBoard);
+            }
+        }
+        /// <summary>
+        /// 保存程序
+        /// </summary>
+        private void saveProgram()
+        {
 
         }
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            AddComponent(new Chip());
+            saveProgram();
         }
 
         private void tbNewProgram_Click(object sender, EventArgs e)

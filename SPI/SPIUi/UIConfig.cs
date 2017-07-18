@@ -199,9 +199,9 @@ namespace SPI.SPIUi
         /// 保存数据到文件
         /// </summary>
         /// <param name="sw">指示要写入的文件的自定义流类对象</param>
-        public override void SaveTo(MyWriter sw)
+        public override void Save(MyWriter sw)
         {
-            //sw.Save(target);
+            sw.Save(target);
         }
         /// <summary>
         /// 从文件读入数据
@@ -209,7 +209,7 @@ namespace SPI.SPIUi
         /// <param name="sr">指示要从中读入数据的自定义流类对象</param>
         public override void LoadFrom(MyReader sr)
         {
-            //sr.Load(ref target);
+            target = sr.LoadDouble();
         }
         /// <summary>
         /// 从其他模板拷贝数据

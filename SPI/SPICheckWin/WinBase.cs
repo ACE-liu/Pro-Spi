@@ -43,8 +43,6 @@ namespace SPI.SPICheckWin
         [BrowsableAttribute(true), ReadOnlyAttribute(true), CategoryAttribute("一般信息")]
         public virtual int SelectColors { get { return -1; } set { } }
         #endregion
-
-        public string WinName;
         public List<WinBase> SubWinList = null;
         protected int id = -1;
         protected WinType wType = WinType.None;
@@ -112,8 +110,38 @@ namespace SPI.SPICheckWin
                 ShowProperty = true;
             GetFocus();
         }
+        public static CheckWinBase NewComponent(WinType type)
+        {
+            CheckWinBase win = null;
+            switch (type)
+            {
+                case WinType.None:
+                    break;
+                case WinType.Board:
+                    break;
+                case WinType.SubBoard:
+                    break;
+                case WinType.Chip:
+                    win = new Chip();
+                    break;
+                case WinType.BGA:
+                    //win = new BGA();
+                    break;
+                case WinType.MarkPoint:
+                    break;
+                case WinType.Land:
+                    break;
+                default:
+                    break;
+            }
+            return win;
+        }
         public virtual void ChangeColorRange(MultiColors mc)
         {
+        }
+        public virtual void OnDeleteFromBoard()
+        {
+            SubWinList?.Clear();
         }
         public virtual void GetFocus()
         {
@@ -132,6 +160,10 @@ namespace SPI.SPICheckWin
             CurFocusPanel.Controls.Clear();
             CurFocusPanel.AutoScrollPosition = new Point(0, 0);
             CurFocusPanel.ResumeLayout();
+            PropertyGrid pg = new PropertyGrid();
+            pg.SelectedObject = this;
+            pg.Dock = DockStyle.Fill;
+            CurFocusPanel.Controls.Add(pg);
         }
         /// <summary>
         /// 递归释放子父控件资源

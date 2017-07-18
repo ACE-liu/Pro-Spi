@@ -82,22 +82,6 @@ namespace SPI.SPIUi
             throw new NotImplementedException();
         }
         /// <summary>
-        /// 保存数据到文件
-        /// </summary>
-        /// <param name="sw"></param>
-        public virtual void SaveTo(MyWriter sw)
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// 从文件读取数据
-        /// </summary>
-        /// <param name="sr"></param>
-        public virtual void LoadFrom(MyReader sr)
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
         /// 从其他模板拷贝数据
         /// </summary>
         /// <param name="ub">要从中拷贝数据的模板</param>
@@ -153,16 +137,14 @@ namespace SPI.SPIUi
             return true;
             //return DefaultDataVersion <= LastVersion&&DefaultDataVersion>=FirstVersion;
         }
-        /// <summary>
-        /// 是否需要保存本UI内容到文件
-        /// </summary>
-        /// <param name="sw"></param>
-        /// <returns></returns>
-        internal bool NeedSaveTo(MyWriter sw)
+        public virtual void Save(MyWriter mw)
         {
-            return DefaultDataVersion <= LastVersion;
+            throw new NotImplementedException();
         }
-
+        public virtual void LoadFrom(MyReader mr)
+        {
+            throw new NotImplementedException();
+        }
         /// <summary>
         ///  设置子控件Top，返回控件的高度
         /// </summary>

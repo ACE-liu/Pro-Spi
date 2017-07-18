@@ -163,7 +163,20 @@ namespace SPI.SPIUi
             return ui;
 
         }
-
+        public override void Save(MyWriter mw)
+        {
+            mw.Save(minValue);
+            mw.Save(leftValue);
+            mw.Save(rightValue);
+            mw.Save(maxValue);
+        }
+        public override void LoadFrom(MyReader mr)
+        {
+            minValue = mr.LoadDouble();
+            leftValue = mr.LoadDouble();
+            rightValue = mr.LoadDouble();
+            maxValue = mr.LoadDouble();
+        }
         private void Tb_TextChanged(object sender, EventArgs e)
         {
             try

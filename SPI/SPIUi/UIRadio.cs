@@ -104,6 +104,14 @@ namespace SPI.SPIUi
             follows.Visible = Check;
             return follows;
         }
+        public override void Save(MyWriter mw)
+        {
+            mw.Save(_check);
+        }
+        public override void LoadFrom(MyReader mr)
+        {
+            Check = mr.LoadBool();
+        }
         public override void Add(Control ctr)
         {
             if (follows == null)
