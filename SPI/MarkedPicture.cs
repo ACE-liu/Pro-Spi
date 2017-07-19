@@ -150,6 +150,15 @@ namespace SPI
             InitializeVariables();
         }
         /// <summary>
+        /// 处理新单板事件。更换项目时发生此事件。
+        /// </summary>
+        public void OnNewBoard()
+        {
+            //InitPiecesVariables();
+            SetXY(0, 0);
+            Invalidate();
+        }
+        /// <summary>
         /// 保持修改级别前后鼠标点位置对应的板位置不变.
         /// </summary>
         /// <param name="mx">鼠标位置X</param>

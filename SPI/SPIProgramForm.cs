@@ -101,7 +101,16 @@ namespace SPI
         /// </summary>
         private void saveProgram()
         {
+            string prjname = "";
+            if (string.IsNullOrEmpty(CurProjectName))
+                prjname = TheBoard.PcbName + "-" + "@";
+            else
+                prjname = CurProjectName;
+            SaveProgramDlg spd = new SaveProgramDlg(prjname);
+            if (spd.ShowDialog()==DialogResult.OK)
+            {
 
+            }
         }
         private void toolStripButton1_Click(object sender, EventArgs e)
         {

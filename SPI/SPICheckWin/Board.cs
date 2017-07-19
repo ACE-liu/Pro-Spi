@@ -27,12 +27,19 @@ namespace SPI.SPICheckWin
         }
         private string pcbName;
         [Category(InternationalLanguage.单板信息), Description(InternationalLanguage.PCB长度单位μm), DisplayName(InternationalLanguage.PCB长度)]
-        public int PcbWidth { get { return pcbWidth; } set { pcbWidth = value; } }
+        public int PcbWidth { get { return pcbWidth; } set {
+                pcbWidth = value;
+                ShowShape.Width = (int)(value / PixelSize);
+            } }
         private int pcbWidth;
 
         [Category(InternationalLanguage.单板信息), Description(InternationalLanguage.轨道宽度), DisplayName("轨道宽度")]
-        public int TrackWidth { get { return trackWidth; } set { trackWidth = value; } }
-        private int trackWidth;
+        public int PcbHeight { get { return pcbHeight; }
+            set {
+                pcbHeight = value;
+                ShowShape.Height = (int)(value / PixelSize);
+            } }
+        private int pcbHeight;
 
         [Category(InternationalLanguage.单板信息), Description(InternationalLanguage.夹紧量单位μm), ReadOnly(false), DisplayName(InternationalLanguage.夹紧量)]
         public int SpareWidth
@@ -40,7 +47,7 @@ namespace SPI.SPICheckWin
         private int spareWidth;
         [CategoryAttribute(InternationalLanguage.单板信息), DescriptionAttribute("分辨率微米像素"), ReadOnlyAttribute(true), DisplayName("分辨率")]
         public double PixelSize { get { return _pixelSize; } set { _pixelSize = value; } }
-        double _pixelSize;
+        double _pixelSize=15;
 
         [Category(InternationalLanguage.单板信息), Description("启用主板条码"), DisplayName("启用主板条码")]
         public bool UseMainBoardBarcode
@@ -136,6 +143,7 @@ namespace SPI.SPICheckWin
             {
                 SubBoards = new List<SubBoard>();
             }
+            sub.ID = SubBoards.Count + 1;
             SubBoards.Add(sub);
         }
         public void AddMarkpoint(MarkPoint mp)
@@ -166,6 +174,10 @@ namespace SPI.SPICheckWin
             else if(win is SubBoard)
             {
                 SubBoards.Remove(win as SubBoard);
+                if (win.ID<SubBoards.Count)//id乱
+                {
+                    ResetAllSubBoardId();
+                }
             }
             else
             {
@@ -177,7 +189,7 @@ namespace SPI.SPICheckWin
         {
             mw.Save(pcbName);
             mw.Save(pcbWidth);
-            mw.Save(trackWidth);
+            mw.Save(pcbHeight);
             mw.Save(spareWidth);
             mw.Save(_pixelSize);
             mw.Save(useMainBoardBarcode);
@@ -207,7 +219,7 @@ namespace SPI.SPICheckWin
         {
             pcbName = mr.LoadString();
             pcbWidth = mr.LoadInt();
-            trackWidth = mr.LoadInt();
+            pcbHeight = mr.LoadInt();
             spareWidth = mr.LoadInt();
             _pixelSize = mr.LoadDouble();
             useMainBoardBarcode = mr.LoadBool();
@@ -223,7 +235,7 @@ namespace SPI.SPICheckWin
             for (int i = 0; i < mpc; i++)
             {
                 MarkPoint mp = new MarkPoint();
-                mp.LoadFrom(mr);
+                mp.LoadFrom(mr); 
                 AddWin(mp);
             }
             for (int i = 0; i < sbc; i++)
@@ -252,6 +264,19 @@ namespace SPI.SPICheckWin
             }
             // ShowShape.Show();
             //throw new NotImplementedException();
+        }
+        /// <summary>
+        /// 添加删除元件，子板时根据list中的位置重置ID
+        /// </summary>
+        public void ResetAllSubBoardId()
+        {
+            if (SubBoards!=null)
+            {
+                for (int i = 0; i < SubBoards.Count; i++)
+                {
+                    SubBoards[i].ID = i + 1;  //subboard ID从1开始
+                }
+            }
         }
         internal void OnMouseDown(object sender, MouseEventArgs e)
         {
@@ -370,7 +395,7 @@ namespace SPI.SPICheckWin
         {
             pcbName = TheBoard.PcbName;
             PcbWidth = TheBoard.PcbWidth;
-            trackWidth = TheBoard.TrackWidth;
+            trackWidth = TheBoard.PcbHeight;
             spareWidth = TheBoard.SpareWidth;
             _pixelSize = TheBoard.PixelSize;
             useMainBoardBarcode = TheBoard.UseMainBoardBarcode;
@@ -383,7 +408,7 @@ namespace SPI.SPICheckWin
         {
             bd.PcbName = pcbName;
             bd.PcbWidth = pcbWidth;
-            bd.TrackWidth = trackWidth;
+            bd.PcbHeight = trackWidth;
             bd.SpareWidth = spareWidth;
             bd.PixelSize = _pixelSize;
             bd.UseMainBoardBarcode = useMainBoardBarcode;

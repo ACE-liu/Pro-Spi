@@ -7,6 +7,9 @@ using SPI.SPIModel;
 using SPI.SPICheckWin;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace SPI.Global
 {
@@ -24,6 +27,10 @@ namespace SPI.Global
         /// </summary>
        public const int mdelt = 3;
        public const int DefaultDataVersion = int.MaxValue;
+        /// <summary>
+        /// 默认文件格式
+        /// </summary>
+        public const string fileFormat = ".dat";
         /// <summary>
         /// 当前焦点
         /// </summary>
@@ -67,9 +74,11 @@ namespace SPI.Global
         internal static System.Windows.Forms.Panel CurFocusPanel = null;
 
         #region ***程序路径相关配置**
-        public static string ProgramRootPath;
-        public static string ProgramPath;
-        public static string ImagePath;
+        public static string ProgramRootPath=>Directory.GetCurrentDirectory();
+        public static string ProgramFilePath=>ToDirPath(ProgramRootPath)+"prjtxt\\";  //暂时和2D命名一样
+        public static string ProgramImagePath => ToDirPath(ProgramRootPath) + "prjimg\\";
+
+        public static string CurProjectName; //当前程序名
         #endregion
 
         /// <summary>
@@ -94,6 +103,24 @@ namespace SPI.Global
         public static void Initialize()
         {
 
+        }
+        /// <summary>
+        /// 获取写文件的相对路径
+        /// </summary>
+        /// <param name="path">不带后缀的路径名</param>
+        /// <param name="format">格式名</param>
+        /// <returns></returns>
+        public static string GetWritePath(string path, string format = fileFormat)
+        {
+            return path + format;
+        }
+        public static string GetPrjFileRootPath()
+        {
+            if (string.IsNullOrEmpty(ProgramFilePath))
+            {
+                return "";
+            }
+            return ToDirPath(ProgramFilePath);
         }
         /// <summary>
         /// 指定检查框参数设置UI是否正显示在界面上。
@@ -201,6 +228,12 @@ namespace SPI.Global
                 CurFocus = window;
                 window?.OnFocus();
             }
+        }
+        internal static bool IsValidName(string text)
+        {
+            string pattern = @"[#$@&.,|/\\:*?""'<>]";
+            Match mt =Regex.Match(text, pattern);
+            return mt.Value == "";
         }
         #endregion
     }
